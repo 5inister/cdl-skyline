@@ -8,13 +8,11 @@
 	$out_buffer = array();
 	//Convert to array by decoding the json
 	$existing_buffer = json_decode(file_get_contents($bufferFile), true);
-	echo sizeOf($existing_buffer);
 	for ($i=0; $i <sizeof($existing_buffer) ; $i++) { 
 		if ($existing_buffer[$i]['iId']!=$iId){
 			array_push($out_buffer, $existing_buffer[$i]);
 		}
 	}
-	echo sizeOf($out_buffer);
 	$fs1 = fopen($bufferFile,"w");
 	//rencode the json and write back
 	fwrite($fs1, json_encode($out_buffer));

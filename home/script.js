@@ -21,7 +21,7 @@ $( document ).ready(function() {
 	 		
 	 		$("#container").append(new_element);// "<p>Test</p>" );
 			$("#tile_"+i).css("left",((i*spacing))+"px");
-			$("#tile_"+i).data("url", data[i].ID);
+			$("#tile_"+i).data("iId", data[i].iId);
 			if(i>=num_visible_elements+2){
 				$("#tile_"+i).css("visibility","hidden");
 			}
@@ -60,8 +60,12 @@ $( document ).ready(function() {
 		    	$("#tile_"+position_index).css("background-color","red");
 		    	
 		    	manageVisibility(position_index, num_visible_elements, num_elements);
-		    	
+		    	//console.log($("#tile_"+position_index).data('iId'));
+		    	var thisIId = $("#tile_"+position_index).data('iId');//"3669";
 
+		    	$.post( "../update_skyline.php", {  uId: thisUId, iId:thisIId } , function( data ) {
+		    		console.log("updated skyline with this iId ",thisIId);
+		    	});
 
 		    }
   			});
@@ -82,6 +86,11 @@ $( document ).ready(function() {
 		    	
 		    	
 		    	manageVisibility(position_index, num_visible_elements, num_elements);
+		    	var thisIId = $("#tile_"+position_index).data('iId');//"3669";
+
+		    	$.post( "../update_skyline.php", {  uId: thisUId, iId:thisIId } , function( data ) {
+		    		console.log("updated skyline with this iId ",thisIId);
+		    	});
 		    	
 		    }
   			});

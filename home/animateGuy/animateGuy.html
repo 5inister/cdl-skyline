@@ -1,0 +1,58 @@
+<html>
+<head>
+<title>Animated dude</title>
+<script type="text/javascript" src="../jquery-1.10.2.min.js"></script>
+<link href="animateGuy.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div id="guyContainer0">
+        <div id="frame0">
+	        <img id="dude" src="../images/dudeSprite.png" style="overflow: hidden; position: relative; z-index: 2; top: 0px; opacity: 1; width: 984px; height: 150px; left:0px; top:-75;"></img>
+		</div>
+    </div>
+    
+
+<script>
+$(document).ready(function(){
+    var imageSource0 ="../images/dudeSprite.png"
+    $("#dude").attr("src",imageSource0);
+	function animate(){
+		$("#dude").css("left",0);
+		$("#dude").css("top",0);
+		var animation = setInterval(function(){
+			var x = parseInt($("#dude").css("left"));
+			console.log(x);
+			if (x > -824){
+				$("#dude").css("left",x-82);
+			}
+			else{
+				clearInterval(animation);
+				$("#dude").css("left",0);
+				$("#dude").css("top",-75);
+				
+			}
+		},150);
+			
+	}
+	$(document).keypress(function(e) {
+		
+		console.log(e.which);
+
+		//go right with the tiles
+  		if(e.which == 119) {
+  			console.log("press");
+  		
+  		}
+  		//go left with the tiles
+  		if(e.which == 113) {
+  			console.log("press");
+			animate();
+  		}
+	});
+});
+
+
+
+</script>
+</body>
+</html>

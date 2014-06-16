@@ -21,7 +21,7 @@
 				<img id="dude" src="./images/dudeSprite.png" style="overflow: hidden; position: relative; z-index: 2; top: -150px; opacity: 1; width: 984px; height: 225px; left:0px; top:-75;"></img>
 			</div>
 		</div>
-		<div id= "dude"> <img  src="images/stick.png"></img> </div>
+		
 		
 		
 		

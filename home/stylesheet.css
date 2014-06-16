@@ -41,6 +41,17 @@ h2{
 	top:400px;
 	left:350px;
 }
+#dudeContainer{
+	top:273px;
+	left:100px;
+    position:relative;
+}
+#frame0{
+    overflow: hidden;
+    z-index: 3;
+    width: 80px;
+    height: 75px;
+}
 #bannerBlock{
 	position: relative;
 	top:0px;

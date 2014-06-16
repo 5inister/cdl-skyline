@@ -1,11 +1,12 @@
 $( document ).ready(function() {
 	var sort_type = 1;
-	var position_index =1;
+	var position_index =0;
 	
 	var num_elements = 0;
 	var num_visible_elements = 2;
 	//make ajax call - run php script which will return contents of our json file into array called data
 	var thisUId = "USER000";
+	var imageSource0 ="./images/dudeSprite.png"
 	
 	$.post( "../get_skyline.php", {  uId: thisUId } , function( data ) {
 		console.log(data);
@@ -30,7 +31,7 @@ $( document ).ready(function() {
 	}, "json");
 
 
-	var speed = 400;
+	var speed = 1000;
 	var distance = 300;
 
 	$(document).keypress(function(e) {
@@ -42,10 +43,11 @@ $( document ).ready(function() {
     	}
 		
 		//go right with the tiles
-  		if(e.which == 119) {
+  		if(e.which == 113) {
   			hidePhoto();
   			console.log("press");
   			position_index--;
+			animateBackwards();//Animate the character walking left to right
   			$(".tile").animate({
     			left: "+="+distance
 			 }, speed, function() {
@@ -71,9 +73,10 @@ $( document ).ready(function() {
   			});
   		}
   		//go left with the tiles
-  		if(e.which == 113) {
+  		if(e.which == 119) {
   			hidePhoto();
-  			position_index++;	
+  			position_index++;
+			animateForward();//Animate the character walking right to left
   			$(".tile").animate({
     			left: "-="+distance
 			 }, speed, function() {
@@ -143,6 +146,42 @@ $( document ).ready(function() {
     	// $("#tile_"+(position_index)).css("visibility","visible");
     	// $("#tile_"+(position_index+1)).css("visibility","visible");
     	// $("#tile_"+(position_index-1)).css("visibility","visible");
+	}
+	
+	$("#dude").attr("src",imageSource0);
+	function animateForward(){
+		$("#dude").css("left",0);
+		$("#dude").css("top",-75);
+		var animation = setInterval(function(){
+			var x = parseInt($("#dude").css("left"));
+			console.log(x);
+			if (x > -824){
+				$("#dude").css("left",x-82);
+			}
+			else{
+				clearInterval(animation);
+				$("#dude").css("left",0);
+				$("#dude").css("top",-150);
+				
+			}
+		},80);
+	}		
+	function animateBackwards(){
+		$("#dude").css("left",0);
+		$("#dude").css("top",0);
+		var animation = setInterval(function(){
+			var x = parseInt($("#dude").css("left"));
+			console.log(x);
+			if (x > -824){
+				$("#dude").css("left",x-82);
+			}
+			else{
+				clearInterval(animation);
+				$("#dude").css("left",-82);
+				$("#dude").css("top",-150);
+				
+			}
+		},80);
 	}
 
 });

@@ -21,6 +21,7 @@ h2{
 	left:300px;
 	top:200px;
 	z-index:10;
+	visibility:hidden;
 }
 #container{
 	/*overflow: scroll;*/
@@ -50,7 +51,7 @@ h2{
     overflow: hidden;
     z-index: 3;
     width: 80px;
-    height: 75px;
+    height: 73px;
 }
 #bannerBlock{
 	position: relative;

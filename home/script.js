@@ -71,7 +71,7 @@ $( document ).ready(function() {
 			}
 			else{
 				$("#dude").css("left",0);
-				$("#dude").css("top",-150);
+				$("#dude").css("top",-151);
 			}
   		}
   		//go left with the tiles
@@ -100,7 +100,7 @@ $( document ).ready(function() {
 			}
 			else{
 				$("#dude").css("left",-82);
-				$("#dude").css("top",-150);
+				$("#dude").css("top",-151);
 			}
   		}
 	});
@@ -156,7 +156,7 @@ $( document ).ready(function() {
 	$("#dude").attr("src",imageSource0);
 	function animateForward(){
 		$("#dude").css("left",0);
-		$("#dude").css("top",-75);
+		$("#dude").css("top",-76);
 		var animation = setInterval(function(){
 			var x = parseInt($("#dude").css("left"));
 			console.log(x);
@@ -166,7 +166,7 @@ $( document ).ready(function() {
 			else{
 				clearInterval(animation);
 				$("#dude").css("left",0);
-				$("#dude").css("top",-150);
+				$("#dude").css("top",-151);
 				
 			}
 		},80);
@@ -183,7 +183,7 @@ $( document ).ready(function() {
 			else{
 				clearInterval(animation);
 				$("#dude").css("left",-82);
-				$("#dude").css("top",-150);
+				$("#dude").css("top",-151);
 				
 			}
 		},80);

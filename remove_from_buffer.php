@@ -3,7 +3,7 @@
 	$dir = $_POST["uId"];
 	$iId = $_POST["iId"];
 	//Get existing buffer file
-	$bufferFile = $dir .'/'. 'buffer.json';
+	$bufferFile = $dir.'/'.'buffer.json';
 	//Define an empty output array to push instances to be kept
 	$out_buffer = array();
 	//Convert to array by decoding the json

@@ -15,6 +15,7 @@ import json
 from time import sleep,strftime,gmtime
 import Image
 #import py-thermal-printer THIS IS A MODIFIED VERSION OF luopio's library
+import printer
 #TODO Read uId from a config file
 uId='USER000' #For now while we get the correct uId from config
 buffer_url='https://di.ncl.ac.uk/cdl/'+uId+'/buffer.json'
@@ -56,12 +57,12 @@ def paper_print(image_path,serialport='/dev/ttyAMA0'):
 	Returns:
 	1-> int
 	'''
-	'printer=py-thermal-printer.ThermalPrinter(serialport=serialport)' #Commented until library is installed
+	thermal=printer.ThermalPrinter(serialport=serialport)' #Commented until library is installed
 	img=Image.open(image_path)
 	img=img.convert("1") #Convert to single channel
 	data=list(img.getdata())
 	w,h=img.size
-	printer.print_bitmap(data,w,h,False)
+	thermal.print_bitmap(data,w,h,False)
 	return 1
 
 def main():
@@ -84,7 +85,7 @@ def main():
 			if echoed == "0":
 				break
 	else:
-		sleep(5)
+		sleep(2)
 while __name__=="__main__":
 	try:
 		main()

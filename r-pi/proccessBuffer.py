@@ -32,7 +32,13 @@ def get_buffer(buffer_path=buffer_url):
 	'''
 	response=urllib2.urlopen(buffer_path)
 	buffer_json=response.read()
-	buffer_list=json.loads(buffer_json)
+	try:
+		buffer_list=json.loads(buffer_json)
+	except ValueError:
+		response=urllib2.urlopen(buffer_path)
+		buffer_json=response.read()
+		print buffer_json
+		buffer_list=json.loads(buffer_json)
 	return buffer_list
 def remove_from_buffer(itemId,user=uId,remove_php_path=remove_url):
 	'''Posts the item Id (iId) to the remove script on the server and returns
@@ -64,7 +70,7 @@ def image_print(image_path,serialport='/dev/ttyAMA0'):
 	w,h=img.size
 	thermal.print_bitmap(data,w,h,False)
 	return 1
-def byte_print(byte_file_path,serialport='/dev/ttyAMA0')
+def byte_print(byte_file_path,serialport='/dev/ttyAMA0'):
 	'''Prints the corresponding byte file on paper.
 	Takes:
 	byte_path-> str (pointing to a text file)
@@ -73,6 +79,7 @@ def byte_print(byte_file_path,serialport='/dev/ttyAMA0')
 	'''
 	thermal=printer.ThermalPrinter(serialport=serialport)
 	thermal.print_from_byte_file(byte_file_path)
+	print("printing %s" % byte_file_path)
 	return 1
 def main():
 	'''The main function, it performs the following tasks:
@@ -85,11 +92,11 @@ def main():
 	nothing
 	'''
 	buffer=get_buffer()
-	print "Got %d items in buffer" % len(buffer)
 	if len(buffer)>0:
+		print "Got %d items in buffer" % len(buffer)
 		for item in buffer:
 			try:
-				path='images/'+item['fname'].split('.')[0]+'.dat
+				path='images/'+item['fname'].split('.')[0]+'.dat'
 				byte_print(path)
 			except IOError:
 				path='images/'+item['fname']
@@ -99,7 +106,7 @@ def main():
 			if echoed == "0":
 				break
 	else:
-		sleep(2)
+		sleep(0.1)
 while __name__=="__main__":
 	try:
 		main()

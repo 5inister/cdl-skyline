@@ -367,7 +367,7 @@ class ThermalPrinter(object):
         byte_f=open(byte_file)
         printer_bytes=[int(b) for b in byte_f.readlines()]
         byte_f.close()
-        for b in print_bytes:
+        for b in printer_bytes:
             self.printer.write(chr(b))  	
 
 if __name__ == '__main__':

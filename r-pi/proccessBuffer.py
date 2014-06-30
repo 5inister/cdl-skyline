@@ -57,7 +57,7 @@ def paper_print(image_path,serialport='/dev/ttyAMA0'):
 	Returns:
 	1-> int
 	'''
-	thermal=printer.ThermalPrinter(serialport=serialport)' #Commented until library is installed
+	thermal=printer.ThermalPrinter(serialport=serialport) #Commented until library is installed
 	img=Image.open(image_path)
 	img=img.convert("1") #Convert to single channel
 	data=list(img.getdata())
@@ -79,7 +79,7 @@ def main():
 	print "Got %d items in buffer" % len(buffer)
 	if len(buffer)>0:
 		for item in buffer:
-			"""paper_print('path_to_images/'+item['fname'])"""#Will be implemented on r-pi
+			paper_print('images/'+item['fname'])
 			echoed=remove_from_buffer(item['iId'])
 			print "removed "+str(item['iId'])+" from buffer with status "+echoed
 			if echoed == "0":

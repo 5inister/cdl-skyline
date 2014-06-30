@@ -50,21 +50,30 @@ def remove_from_buffer(itemId,user=uId,remove_php_path=remove_url):
 	response=urllib2.urlopen(remove_request)
 	echoed=response.read()
 	return str(echoed)
-def paper_print(image_path,serialport='/dev/ttyAMA0'):
+def image_print(image_path,serialport='/dev/ttyAMA0'):
 	'''Prints the corresponding image file on paper.
 	Takes:
 	image_path-> str (pointing to an RGB/RGBA image)
 	Returns:
 	1-> int
 	'''
-	thermal=printer.ThermalPrinter(serialport=serialport) #Commented until library is installed
+	thermal=printer.ThermalPrinter(serialport=serialport)
 	img=Image.open(image_path)
 	img=img.convert("1") #Convert to single channel
 	data=list(img.getdata())
 	w,h=img.size
 	thermal.print_bitmap(data,w,h,False)
 	return 1
-
+def byte_print(byte_file_path,serialport='/dev/ttyAMA0')
+	'''Prints the corresponding byte file on paper.
+	Takes:
+	byte_path-> str (pointing to a text file)
+	Returns:
+	1-> int
+	'''
+	thermal=printer.ThermalPrinter(serialport=serialport)
+	thermal.print_from_byte_file(byte_file_path)
+	return 1
 def main():
 	'''The main function, it performs the following tasks:
 	Every 5 seconds get the buffer.
@@ -79,7 +88,12 @@ def main():
 	print "Got %d items in buffer" % len(buffer)
 	if len(buffer)>0:
 		for item in buffer:
-			paper_print('images/'+item['fname'])
+			try:
+				path='images/'+item['fname'].split('.')[0]+'.dat
+				byte_print(path)
+			except IOError:
+				path='images/'+item['fname']
+				image_print(path)
 			echoed=remove_from_buffer(item['iId'])
 			print "removed "+str(item['iId'])+" from buffer with status "+echoed
 			if echoed == "0":

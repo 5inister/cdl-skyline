@@ -35,10 +35,14 @@ def get_buffer(buffer_path=buffer_url):
 	try:
 		buffer_list=json.loads(buffer_json)
 	except ValueError:
-		response=urllib2.urlopen(buffer_path)
-		buffer_json=response.read()
-		print buffer_json
-		buffer_list=json.loads(buffer_json)
+		buffer_list=None
+		attempts=0
+		while buffer_list==None and attempts<10:
+			print("Can not get JSON, re-try %d / 10" % attempts)
+			response=urllib2.urlopen(buffer_path)
+			buffer_json=response.read()
+			buffer_list=json.loads(buffer_json)
+			attempts += 1
 	return buffer_list
 def remove_from_buffer(itemId,user=uId,remove_php_path=remove_url):
 	'''Posts the item Id (iId) to the remove script on the server and returns

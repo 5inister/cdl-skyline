@@ -355,7 +355,20 @@ class ThermalPrinter(object):
             print "output saved to %s" % test_print.name
             test_print.close()           
 
-
+    def print_from_byte_file(self,byte_file):
+        '''Reads the byte information from a file (usually extension.dat) containing one byte per line in
+        the format byte+"\n". To create these files please use the convertPix2bin.py script.
+        Takes:
+        self
+        byte_file->string
+        Returns:
+        None
+        '''
+        byte_f=open(byte_file)
+        printer_bytes=[int(b) for b in byte_f.readlines()]
+        byte_f.close()
+        for b in print_bytes:
+            self.printer.write(chr(b))  	
 
 if __name__ == '__main__':
     import sys, os

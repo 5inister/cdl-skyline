@@ -5,7 +5,7 @@ html{
 	
 }
 h1{
-	color: white;
+	color: black;
 	/*background-color:rgba(74,76,4,0.5);*/
 	position:fixed;
 	left:50px;
@@ -26,24 +26,14 @@ h2{
 #container{
 	/*overflow: scroll;*/
 }
-#banner{
-	position: fixed;
-	top:0px;
-	width:100%;
-	/*background-color:rgba(74,76,4,0.5);*/
-	height: 90px;
-	z-index: 1000;
-	border-bottom:5px solid;
-/*	border-radius:10px; 
-*/	border-color: white;
-}
+
 #dude{
 	position: absolute;
 	top:400px;
 	left:350px;
 }
 #dudeContainer{
-	top:273px;
+	top:228px;
 	left:100px;
     position:relative;
 }
@@ -67,7 +57,7 @@ h2{
 	position:absolute;
 	width:auto;
 	height:auto;
-	border:2px solid;
+	border:0px solid;
 	border-radius:2px; 
 	border-color: gray;
 }

@@ -15,6 +15,7 @@ import json
 from time import sleep,strftime,gmtime
 import Image
 #import py-thermal-printer THIS IS A MODIFIED VERSION OF luopio's library
+import printer
 #TODO Read uId from a config file
 uId='USER000' #For now while we get the correct uId from config
 buffer_url='https://di.ncl.ac.uk/cdl/'+uId+'/buffer.json'
@@ -31,7 +32,17 @@ def get_buffer(buffer_path=buffer_url):
 	'''
 	response=urllib2.urlopen(buffer_path)
 	buffer_json=response.read()
-	buffer_list=json.loads(buffer_json)
+	try:
+		buffer_list=json.loads(buffer_json)
+	except ValueError:
+		buffer_list=None
+		attempts=0
+		while buffer_list==None and attempts<10:
+			print("Can not get JSON, re-try %d / 10" % attempts)
+			response=urllib2.urlopen(buffer_path)
+			buffer_json=response.read()
+			buffer_list=json.loads(buffer_json)
+			attempts += 1
 	return buffer_list
 def remove_from_buffer(itemId,user=uId,remove_php_path=remove_url):
 	'''Posts the item Id (iId) to the remove script on the server and returns
@@ -49,21 +60,31 @@ def remove_from_buffer(itemId,user=uId,remove_php_path=remove_url):
 	response=urllib2.urlopen(remove_request)
 	echoed=response.read()
 	return str(echoed)
-def paper_print(image_path,serialport='/dev/ttyAMA0'):
+def image_print(image_path,serialport='/dev/ttyAMA0'):
 	'''Prints the corresponding image file on paper.
 	Takes:
 	image_path-> str (pointing to an RGB/RGBA image)
 	Returns:
 	1-> int
 	'''
-	'printer=py-thermal-printer.ThermalPrinter(serialport=serialport)' #Commented until library is installed
+	thermal=printer.ThermalPrinter(serialport=serialport)
 	img=Image.open(image_path)
 	img=img.convert("1") #Convert to single channel
 	data=list(img.getdata())
 	w,h=img.size
-	printer.print_bitmap(data,w,h,False)
+	thermal.print_bitmap(data,w,h,False)
 	return 1
-
+def byte_print(byte_file_path,serialport='/dev/ttyAMA0'):
+	'''Prints the corresponding byte file on paper.
+	Takes:
+	byte_path-> str (pointing to a text file)
+	Returns:
+	1-> int
+	'''
+	thermal=printer.ThermalPrinter(serialport=serialport)
+	thermal.print_from_byte_file(byte_file_path)
+	print("printing %s" % byte_file_path)
+	return 1
 def main():
 	'''The main function, it performs the following tasks:
 	Every 5 seconds get the buffer.
@@ -75,16 +96,21 @@ def main():
 	nothing
 	'''
 	buffer=get_buffer()
-	print "Got %d items in buffer" % len(buffer)
 	if len(buffer)>0:
+		print "Got %d items in buffer" % len(buffer)
 		for item in buffer:
-			"""paper_print('path_to_images/'+item['fname'])"""#Will be implemented on r-pi
+			try:
+				path='images/'+item['fname'].split('.')[0]+'.dat'
+				byte_print(path)
+			except IOError:
+				path='images/'+item['fname']
+				image_print(path)
 			echoed=remove_from_buffer(item['iId'])
 			print "removed "+str(item['iId'])+" from buffer with status "+echoed
 			if echoed == "0":
 				break
 	else:
-		sleep(5)
+		sleep(0.1)
 while __name__=="__main__":
 	try:
 		main()

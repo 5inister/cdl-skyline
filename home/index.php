@@ -7,6 +7,9 @@
 </head>
 
 	<body>
+		<div id="banner">
+			<h1> Photo Categories </h1>	
+		</div>
 		<div id="bannerBlock"></div>
 		<div id= "container">
 			<div id= "secret"> <img  src=""></img> </div>

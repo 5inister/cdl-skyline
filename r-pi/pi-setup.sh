@@ -15,7 +15,7 @@ sudo ln -s /usr/lib/arm-linux-gnueabi/libjpeg.so /usr/lib
 sudo ln -s /usr/lib/arm-linux-gnueabi/libfreetype.so /usr/lib
 sudo ln -s /usr/lib/arm-linux-gnueabi/libz.so /usr/lib
 sudo apt-get install libjpeg-dev libfreetype6 libfreetype6-dev zlib1g-dev
-sudo pip install
+sudo pip install pil
 echo "Adding auto login"
 sudo cp ~/cdl-skyline/r-pi/inittab /etc/
 echo "Modifying startup files"

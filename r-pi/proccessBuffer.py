@@ -23,7 +23,9 @@ buffer_url='https://di.ncl.ac.uk/cdl/'+uId+'/buffer.json'
 print buffer_url
 remove_url='https://di.ncl.ac.uk/cdl/remove_from_buffer.php'
 print remove_url
+import sys
 print "Starting"
+sys.path.append("/home/pi/cdl-skyline/r-pi")
 def get_buffer(buffer_path=buffer_url):
 	'''Gets the buffer json data from buffer_path and converts it into a list.
 	Takes:
@@ -104,6 +106,7 @@ def main():
 				path='images/'+item['fname'].split('.')[0]+'.dat'
 				byte_print(path)
 			except IOError:
+				print path
 				path='images/'+item['fname']
 				image_print(path)
 			echoed=remove_from_buffer(item['iId'])

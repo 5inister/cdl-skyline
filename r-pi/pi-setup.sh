@@ -18,4 +18,6 @@ sudo apt-get install libjpeg-dev libfreetype6 libfreetype6-dev zlib1g-dev
 sudo pip install
 echo "Adding auto login"
 sudo cp ~/cdl-skyline/r-pi/inittab /etc/
+echo "Backing up rc.local as rc.local.bkup"
+sudo cp /etc/init.d/rc.local /etc/init.d/rc.local.bkup
 echo "system ready!"

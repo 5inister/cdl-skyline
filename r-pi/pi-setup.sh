@@ -1,7 +1,6 @@
 #!/bin/bash
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get install git
 sudo apt-get install python-pip python-dev python2.7-dev
 sudo pip uninstall pil
 wget http://www.ijg.org/files/jpegsrc.v9.tar.gz

@@ -1,3 +1,4 @@
+#!/usr/bin/python
 ###############################################################################
 #proccessBuffer.py                                                            #
 #This file is the core of the printer-webserver interface it probes the       #

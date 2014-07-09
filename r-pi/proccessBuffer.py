@@ -17,6 +17,11 @@ from time import sleep,strftime,gmtime
 import Image
 #import py-thermal-printer THIS IS A MODIFIED VERSION OF luopio's library
 import printer
+import RPi.GPIO as GPIO
+#Enable printer power on pin 11 (GPIO 17)
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(11,GPIO.OUT)
+GPIO,output(11,GPIO.HIGH)
 #TODO Read uId from a config file
 uId='USER000' #For now while we get the correct uId from config
 buffer_url='https://di.ncl.ac.uk/cdl/'+uId+'/buffer.json'

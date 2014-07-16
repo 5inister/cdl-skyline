@@ -22,7 +22,7 @@ import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(11,GPIO.OUT)
 GPIO.output(11,GPIO.HIGH)
-GPIO.setup(12,GPIO.IN)
+GPIO.setup(12,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 #TODO Read uId from a config file
 uId='USER000' #For now while we get the correct uId from config
 buffer_url='https://di.ncl.ac.uk/cdl/'+uId+'/buffer.json'
@@ -94,6 +94,20 @@ def byte_print(byte_file_path,serialport='/dev/ttyAMA0'):
 	thermal.print_from_byte_file(byte_file_path)
 	print("printing %s" % byte_file_path)
 	return 1
+def shutdown(button_pin=12):
+	'''Shuts down the printer when a button is pressed, default 
+	button pin is 12 (18 on BCM2835).
+	Takes:
+	button_pin ->int
+	Returns:
+	Nothing
+	'''
+	state=GPIO.input(12)
+	if state == 0:
+		print("Shutdown signal detected")
+		GPIO.output(11,GPIO.LOW)
+		subprocess.call(['shutdown','-h','now'])
+	time.sleep(0.15)
 def main():
 	'''The main function, it performs the following tasks:
 	Every 5 seconds get the buffer.
@@ -121,12 +135,8 @@ def main():
 				break
 	else:
 		sleep(0.05)
-	state=GPIO.input(12)
-	if state == 0:
-		print("Shutdown signal detected")
-		GPIO.output(11,GPIO.LOW)
-		subprocess.call(['shutdown','-h','now'])
-	time.sleep(0.15)
+	shutdown()
+	
 		
 while __name__=="__main__":
 	try:

@@ -22,6 +22,7 @@ import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(11,GPIO.OUT)
 GPIO.output(11,GPIO.HIGH)
+GPIO.setup(12,GPIO.IN)
 #TODO Read uId from a config file
 uId='USER000' #For now while we get the correct uId from config
 buffer_url='https://di.ncl.ac.uk/cdl/'+uId+'/buffer.json'
@@ -119,7 +120,14 @@ def main():
 			if echoed == "0":
 				break
 	else:
-		sleep(0.1)
+		sleep(0.05)
+	state=GPIO.input(12)
+	if state == 0:
+		print("Shutdown signal detected")
+		GPIO.output(11,GPIO.LOW)
+		subprocess.call(['shutdown','-h','now'])
+	time.sleep(0.15)
+		
 while __name__=="__main__":
 	try:
 		main()

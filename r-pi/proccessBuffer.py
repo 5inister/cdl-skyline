@@ -15,6 +15,7 @@ import urllib2
 import json
 from time import sleep,strftime,gmtime
 import Image
+import subprocess
 #import py-thermal-printer THIS IS A MODIFIED VERSION OF luopio's library
 import printer
 import RPi.GPIO as GPIO
@@ -107,7 +108,7 @@ def shutdown(button_pin=12):
 		print("Shutdown signal detected")
 		GPIO.output(11,GPIO.LOW)
 		subprocess.call(['shutdown','-h','now'])
-	time.sleep(0.15)
+	sleep(0.15)
 def main():
 	'''The main function, it performs the following tasks:
 	Every 5 seconds get the buffer.

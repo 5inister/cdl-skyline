@@ -21,6 +21,8 @@ import printer
 import RPi.GPIO as GPIO
 #Enable printer power on pin 11 (GPIO 17)
 GPIO.setmode(GPIO.BOARD)
+GPIO.setup(13,GPIO.OUT)
+GPIO.output(13,GPIO.HIGH)
 GPIO.setup(11,GPIO.OUT)
 GPIO.output(11,GPIO.HIGH)
 GPIO.setup(12,GPIO.IN,pull_up_down=GPIO.PUD_UP)

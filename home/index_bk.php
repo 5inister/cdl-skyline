@@ -18,12 +18,8 @@
 			</div>
 		</div>
 		<div id="controls" class="mobile">
-			<div id="leftArrow">
-				<img id="leftBtn" src ="./images/leftArrow.png">
-			</div>
-			<div id="rightArrow">
-				<img id="rightBtn" src ="./images/rightArrow.png">
-			</div>
+			<div id="leftArrow"></div>
+			<div id="rightArrow"></div>
 		</div>
 		
 		

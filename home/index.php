@@ -25,6 +25,7 @@
 				<img id="rightBtn" src ="./images/rightArrow.png">
 			</div>
 		</div>
+
 		
 		
 		

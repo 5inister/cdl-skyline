@@ -5,15 +5,9 @@ $( document ).ready(function() {
 	var num_elements = 0;
 	var num_visible_elements = 6;
 	//make ajax call - run php script which will return contents of our json file into array called data
-
-	
-
 		//alert("Hello, " + response);
-
 	var useLogIn = true;
-
 	var thisUId;
-
 	if(useLogIn){
 		var response = prompt("What is your userID?");
 		thisUId = response;
@@ -34,7 +28,6 @@ $( document ).ready(function() {
 				found_start_pos = true;
 			}
 		}
-
 		for (var i = 0; i < data.length; i++) {
 			//console.log(data[i]);
 			//a global to tell us how many divs we have
@@ -142,8 +135,7 @@ $( document ).ready(function() {
 					$("#dude").css("left",-82);
 					$("#dude").css("top",-151);
 					is_moving= false;
-				}
-				
+				}	
 			}
   		}
 	});
@@ -179,6 +171,7 @@ $( document ).ready(function() {
 				else{
 					$("#dude").css("left",0);
 					$("#dude").css("top",-151);
+					is_moving=false;
 				}
 			}
 	});
@@ -211,8 +204,7 @@ $( document ).ready(function() {
 									$("#dude").css("left",0);
 									$("#dude").css("top",-151);
 								}
-								tick++;
-									
+								tick++;	
 							}
 						},					
 						complete:function() {
@@ -234,13 +226,11 @@ $( document ).ready(function() {
 			else{
 				$("#dude").css("left",-82);
 				$("#dude").css("top",-151);
-			}
-				
+			}	
 		}			
 	});
 	function toggleShowPhoto(div_index){
 		var visibility = $("#secret").css("visibility");
-
 		if(visibility=='hidden'){
 			var url = $("#tile_"+div_index).data("url");
 			console.log(url);
@@ -253,7 +243,6 @@ $( document ).ready(function() {
 		else if (visibility=='visible'){
 			$("#secret").css("visibility","hidden");
 		}
-
 	}
 	function hidePhoto(){
 		
@@ -286,7 +275,6 @@ $( document ).ready(function() {
     	// $("#tile_"+(position_index+1)).css("visibility","visible");
     	// $("#tile_"+(position_index-1)).css("visibility","visible");
 	}
-	
 	$("#dude").attr("src",imageSource0);
 	function animateForward(){
 		$("#dude").css("left",0);
@@ -317,12 +305,10 @@ $( document ).ready(function() {
 			else{
 				clearInterval(animation);
 				$("#dude").css("left",-82);
-				$("#dude").css("top",-151);
-				
+				$("#dude").css("top",-151);	
 			}
 		},83);
 	}
-
 });
 
 

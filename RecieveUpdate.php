@@ -12,7 +12,6 @@ if (isset($_GET['challenge'])){
 			$items = $jsobj['items'];
 			$c = 0;
 			$new_items=array();
-			
 			foreach ($items as $it){
                 $tm=time();
 				$url = $it['url'];
@@ -38,10 +37,10 @@ if (isset($_GET['challenge'])){
 				array_push($new_items,$this_new_item);
 				$c++;
 			}
-			$contents=file_get_contents('skyline.json');
+			$contents=file_get_contents($userID.'/skyline.json');
 			$existing_items=json_decode($contents,true);
 			$final_items=array_merge($existing_items,$new_items);
-			file_put_contents('skyline.json',json_encode($final_items));
+			file_put_contents($userID.'/skyline.json',json_encode($final_items));
 			echo "1";
 		}else{
 			echo "2";
@@ -51,7 +50,7 @@ if (isset($_GET['challenge'])){
 	}
 }
 }catch (Exception $e){
-	file_put_contents('data/log_recieve.log',$e->getMessage());
+	file_put_contents($userID.'/skyline.json',$e->getMessage());
 	echo "-1";
 }
 ?>

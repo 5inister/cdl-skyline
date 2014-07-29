@@ -78,6 +78,20 @@ $( document ).ready(function() {
 		$("#secret").css("visibility","hidden");
 
 	}
+	function toggleShowPhoto(div_index){
+		var visibility = $("#secret").css("visibility");
+		if(visibility=='hidden'){
+			var url = $("#tile_"+div_index).data("url");
+			console.log(url);
+			//for now use a spoof url
+			url = "images/face.jpg";
+			$("#secret").find("img").attr("src", url)
+			$("#secret").css("visibility","visible");
+		}
+		else if (visibility=='visible'){
+			$("#secret").css("visibility","hidden");
+		}
+	}
 	function getIDofClosestTile(){
 		var id=0;
 		//console.log(id);

@@ -5,15 +5,9 @@ $( document ).ready(function() {
 	var num_elements = 0;
 	var num_visible_elements = 6;
 	//make ajax call - run php script which will return contents of our json file into array called data
-
-	
-
 		//alert("Hello, " + response);
-
 	var useLogIn = true;
-
 	var thisUId;
-
 	if(useLogIn){
 		var response = prompt("What is your userID?");
 		thisUId = response;
@@ -21,7 +15,7 @@ $( document ).ready(function() {
 	else{
 		thisUId = "USER000";
 	}
-	//var imageSource0 ="../"+thisUId+"/images/dudeSprite.png"
+	var imageSource0 ="../"+thisUId+"/images/dudeSprite.png"
 	console.log(thisUId);
 	$.post( "../get_skyline.php", {  uId: thisUId } , function( data ) {
 		var found_start_pos = false;
@@ -34,7 +28,6 @@ $( document ).ready(function() {
 				found_start_pos = true;
 			}
 		}
-
 		for (var i = 0; i < data.length; i++) {
 			//console.log(data[i]);
 			//a global to tell us how many divs we have
@@ -67,101 +60,19 @@ $( document ).ready(function() {
 	var distance = 300;
 
 	$(document).keypress(function(e) {
-		
-		//console.log(e.which);
-
 		if(e.which == 13) {
 			toggleShowPhoto(position_index);
     	}
 		//go right with the tiles
   		if(e.which == 97) {
-  			console.log('is_moving ',is_moving)
-  			if(!is_moving){
-  				is_moving = true;
-				if(position_index>0){
-					hidePhoto();
-					//console.log("press");
-					position_index--;
-					animateBackwards();//Animate the character walking left to right
-					$(".tile").animate({
-						left: "+="+distance
-					}, speed, function() {
-						// Animation complete.
-						//this conditional counts how many animated elements there are in this class, if there are none all animation is finished
-						if ($(".tile:animated").length === 0){
-							console.log("gone right: position_index ",position_index);
-							$(".tile").css("background-color","black");
-							$("#tile_"+position_index).css("background-color","red");
-							manageVisibility(position_index, num_visible_elements, num_elements);
-							//console.log($("#tile_"+position_index).data('iId'));
-							var thisIId = $("#tile_"+position_index).data('iId');//"3669";
-							$.post( "../update_skyline.php", {  uId: thisUId, iId:thisIId } , function( data ) {
-								console.log("updated skyline with this iId ",thisIId);
-							});
-							is_moving = false;
-						}
-					});
-				}
-			
-				else{
-					$("#dude").css("left",0);
-					$("#dude").css("top",-151);
-				}
-			}
-			
-  		}
+			animateBackwards();}
   		//go left with the tiles
   		if(e.which == 100) {
-  			console.log('is_moving ',is_moving)
-  			if(!is_moving){
-  				is_moving = true;
-				if(position_index<num_elements-1){
-					hidePhoto();
-					position_index++;
-					animateForward();//Animate the character walking right to left
-					$(".tile").animate({
-						left: "-="+distance
-						}, speed, function() {
-					// Animation complete.
-						if ($(".tile:animated").length === 0){
-							console.log("gone left . position_index ",position_index);
-							$(".tile").css("background-color","black");
-							$("#tile_"+position_index).css("background-color","red");
-				    		manageVisibility(position_index, num_visible_elements, num_elements);
-							var thisIId = $("#tile_"+position_index).data('iId');//"3669";
-
-							$.post( "../update_skyline.php", {  uId: thisUId, iId:thisIId } , function( data ) {
-								console.log("updated skyline with this iId ",thisIId);
-							});
-				    		is_moving = false;
-						}
-					});
-				}
-				else{
-					$("#dude").css("left",-82);
-					$("#dude").css("top",-151);
-				}
-				
-			}
+			animateForward();
   		}
 	});
-	function toggleShowPhoto(div_index){
-		var visibility = $("#secret").css("visibility");
-
-		if(visibility=='hidden'){
-			var url = $("#tile_"+div_index).data("url");
-			console.log(url);
-
-			//for now use a spoof url
-			url = "images/face.jpg";
-			$("#secret").find("img").attr("src", url)
-			$("#secret").css("visibility","visible");
-		}
-		else if (visibility=='visible'){
-			$("#secret").css("visibility","hidden");
-		}
-
-	}
+	$("#leftArrow").click(animateBackwards);
+	$("#rightArrow").click(animateForward);
 	function hidePhoto(){
 		
 		$("#secret").css("visibility","hidden");
@@ -187,49 +98,125 @@ $( document ).ready(function() {
     	for(var i = (position_index-num_visible_elements); i<=(position_index+num_visible_elements);i++){
 		    $("#tile_"+i).css("visibility","visible");
     	}
-
-
-    	// $("#tile_"+(position_index)).css("visibility","visible");
-    	// $("#tile_"+(position_index+1)).css("visibility","visible");
-    	// $("#tile_"+(position_index-1)).css("visibility","visible");
 	}
-	
 	$("#dude").attr("src",imageSource0);
+	
 	function animateForward(){
-		$("#dude").css("left",0);
-		$("#dude").css("top",-76);
-		var animation = setInterval(function(){
-			var x = parseInt($("#dude").css("left"));
-			//console.log(x);
-			if (x > -824){
-				$("#dude").css("left",x-82);
-			}
-			else{
-				clearInterval(animation);
+		console.log('is_moving ',is_moving)
+		var startLeft=parseInt($(".tile").css("left"));
+		var tick=0;
+  		if(!is_moving){
+  			is_moving = true;
+			if(position_index<num_elements-1){
+				hidePhoto();
+				position_index++;
 				$("#dude").css("left",0);
-				$("#dude").css("top",-151);
-				
-			}
-		},80);
-	}		
-	function animateBackwards(){
-		$("#dude").css("left",0);
-		$("#dude").css("top",0);
-		var animation = setInterval(function(){
-			var x = parseInt($("#dude").css("left"));
-			//console.log(x);
-			if (x > -824){
-				$("#dude").css("left",x-82);
+				$("#dude").css("top",-76);
+				$(".tile").animate({
+					left: "-="+distance
+					}, {
+						duration:speed,
+						progress:function(promise,prog,remain){
+							//var currentLeft=parseInt($(".tile").css("left"));
+							//var travelled=startLeft-currentLeft;
+							if (prog>tick*.08){
+								var x = $("#dude").position().left;
+								//console.log("dudex="+x);
+								if (x > -824){
+									$("#dude").css("left",x-82);
+								}
+								else{
+									$("#dude").css("left",0);
+									$("#dude").css("top",-151);
+									tick=12;
+								}
+								tick++;	
+							}
+						},					
+						complete:function() {
+						// Animation complete.
+							$("#dude").css("left",0);
+							$("#dude").css("top",-151);
+							if ($(".tile:animated").length === 0){
+								console.log("gone left . position_index ",position_index);
+								$(".tile").css("background-color","black");
+								$("#tile_"+position_index).css("background-color","red");
+								manageVisibility(position_index, num_visible_elements, num_elements);
+								var thisIId = $("#tile_"+position_index).data('iId');//"3669";
+								$.post( "../update_skyline.php", {  uId: thisUId, iId:thisIId } , function( data ) {
+									console.log("updated skyline with this iId ",thisIId);
+								});
+								is_moving = false;
+							}
+						}
+					});
 			}
 			else{
-				clearInterval(animation);
+				console.log("End of screen");
 				$("#dude").css("left",-82);
 				$("#dude").css("top",-151);
-				
+				is_moving=false;
+			}	
+		}			
+	}		
+	function animateBackwards(){
+		console.log('is_moving ',is_moving)
+		var startLeft=parseInt($(".tile").css("left"));
+		var tick=0;
+  		if(!is_moving){
+  			is_moving = true;
+			if(position_index>0){
+				hidePhoto();
+				position_index--;
+				$("#dude").css("left",0);
+				$("#dude").css("top",0);
+				$(".tile").animate({
+					left: "+="+distance
+					}, {
+						duration:speed,
+						progress:function(promise,prog,remain){
+							//var currentLeft=parseInt($(".tile").css("left"));
+							//var travelled=startLeft-currentLeft;
+							if (prog>tick*.08){
+								var x = $("#dude").position().left;
+								//console.log("dudex="+x);
+								if (x > -824){
+									$("#dude").css("left",x-82);
+								}
+								else{
+									$("#dude").css("left",-82);
+									$("#dude").css("top",-151);
+									tick=12;
+								}
+								tick++;	
+							}
+						},					
+						complete:function() {
+						// Animation complete.
+							$("#dude").css("left",-82);
+							$("#dude").css("top",-151);
+							if ($(".tile:animated").length === 0){
+								console.log("gone left . position_index ",position_index);
+								$(".tile").css("background-color","black");
+								$("#tile_"+position_index).css("background-color","red");
+								manageVisibility(position_index, num_visible_elements, num_elements);
+								var thisIId = $("#tile_"+position_index).data('iId');//"3669";
+								$.post( "../update_skyline.php", {  uId: thisUId, iId:thisIId } , function( data ) {
+									console.log("updated skyline with this iId ",thisIId);
+								});
+								is_moving = false;
+							}
+						}
+					});
 			}
-		},80);
+			else{
+				console.log("End of screen");
+				$("#dude").css("left",0);
+				$("#dude").css("top",-151);
+				is_moving=false;
+			}	
+		}
 	}
-
 });
 
 

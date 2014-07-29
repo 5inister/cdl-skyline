@@ -11,13 +11,16 @@ cd jpeg-9c
 make
 sudo make install
 cd ~
-sudo ln -s /usr/lib/arm-linux-gnueabi/libjpeg.so /usr/lib <-Check this
+sudo ln -s /usr/lib/arm-linux-gnueabi/libjpeg.so /usr/lib
 sudo ln -s /usr/lib/arm-linux-gnueabi/libfreetype.so /usr/lib
 sudo ln -s /usr/lib/arm-linux-gnueabi/libz.so /usr/lib
 sudo apt-get install libjpeg-dev libfreetype6 libfreetype6-dev zlib1g-dev
-sudo pip install
+sudo pip install pil
 echo "Adding auto login"
 sudo cp ~/cdl-skyline/r-pi/inittab /etc/
-echo "Backing up rc.local as rc.local.bkup"
-sudo cp /etc/init.d/rc.local /etc/init.d/rc.local.bkup
-echo "system ready!"
+echo "Modifying startup files"
+sudo cp ~/cdl-skyline/r-pi/bufferprocess.sh /etc/init.d/
+sudo chmod 755 /etc/init.d/bufferprocess.sh
+sudo update-rc.d bufferprocess.sh defaults
+
+exit 0

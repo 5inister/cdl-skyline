@@ -11,15 +11,36 @@ if (isset($_GET['challenge'])){
 			$userID = $jsobj['uid'];
 			$items = $jsobj['items'];
 			$c = 0;
+			$new_items=array();
 			foreach ($items as $it){
                 $tm=time();
 				$url = $it['url'];
 				$dt = $it['datetime'];
 				$labels = $it['labels'];
-				$probability = $it['probability'];
-				file_put_contents("data/upd_$c"."_$userID.txt","$url,$dt,$labels,$probability");
+				$probability = $it['confidence'];
+				$dominant_category_index= array_keys($probability, max($probability));
+				if (count($dominant_category_index)>1){
+					$dominat_category='uncategorised';
+				}
+				else{
+					$dominat_category=labels[dominat_category_index];
+				}
+				$fname=$dominat_category.".png";
+				$url_parts=explode('/',$url);
+				$iId=end(explode('_',end($url_parts)));
+				$visited=0;
+				//file_put_contents("data/upd_$c"."_$userID.txt","$url,$dt,$labels,$probability");
+				$this_new_item=array (
+				"url"=>$url,
+				
+				);
+				array_push($new_items,$this_new_item);
 				$c++;
 			}
+			$contents=file_get_contents($userID.'/skyline.json');
+			$existing_items=json_decode($contents,true);
+			$final_items=array_merge($existing_items,$new_items);
+			file_put_contents($userID.'/skyline.json',json_encode($final_items));
 			echo "1";
 		}else{
 			echo "2";
@@ -29,7 +50,7 @@ if (isset($_GET['challenge'])){
 	}
 }
 }catch (Exception $e){
-	file_put_contents('data/log_recieve.log',$e->getMessage());
+	file_put_contents($userID.'/skyline.json',$e->getMessage());
 	echo "-1";
 }
 ?>

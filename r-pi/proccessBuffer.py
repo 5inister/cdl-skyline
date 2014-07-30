@@ -27,13 +27,6 @@ GPIO.output(13,GPIO.HIGH)
 GPIO.setup(11,GPIO.OUT)
 GPIO.output(11,GPIO.HIGH)
 GPIO.setup(12,GPIO.IN,pull_up_down=GPIO.PUD_UP)
-#TODO Read uId from a config file
-uId=configure('uId')
-server=configure('server')
-buffer_url=server+uId+'/buffer.json'
-print buffer_url
-remove_url=server+'/remove_from_buffer.php'
-print remove_url
 import sys
 print "Starting"
 sys.path.append("/home/pi/cdl-skyline/r-pi")
@@ -157,7 +150,12 @@ def main():
 		sleep(0.05)
 	shutdown()
 	
-		
+uId=configure('uId')
+server=configure('server')
+buffer_url=server+uId+'/buffer.json'
+print buffer_url
+remove_url=server+'/remove_from_buffer.php'
+print remove_url		
 while __name__=="__main__":
 	try:
 		main()

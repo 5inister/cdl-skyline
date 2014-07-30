@@ -45,6 +45,12 @@ def configure(element,xml_file="/home/pi/cdl-skyline/r-pi/config.xml"):
 		return text
 	else:
 		return None
+uId=configure('uId')
+server=configure('server')
+buffer_url=server+uId+'/buffer.json'
+print buffer_url
+remove_url=server+'/remove_from_buffer.php'
+print remove_url
 def get_buffer(buffer_path=buffer_url):
 	'''Gets the buffer json data from buffer_path and converts it into a list.
 	Takes:
@@ -150,12 +156,7 @@ def main():
 		sleep(0.05)
 	shutdown()
 	
-uId=configure('uId')
-server=configure('server')
-buffer_url=server+uId+'/buffer.json'
-print buffer_url
-remove_url=server+'/remove_from_buffer.php'
-print remove_url		
+		
 while __name__=="__main__":
 	try:
 		main()

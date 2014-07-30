@@ -16,6 +16,7 @@ import json
 from time import sleep,strftime,gmtime
 import Image
 import subprocess
+import xml.etree.ElementTree as ET
 #import py-thermal-printer THIS IS A MODIFIED VERSION OF luopio's library
 import printer
 import RPi.GPIO as GPIO
@@ -27,14 +28,30 @@ GPIO.setup(11,GPIO.OUT)
 GPIO.output(11,GPIO.HIGH)
 GPIO.setup(12,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 #TODO Read uId from a config file
-uId='USER000' #For now while we get the correct uId from config
-buffer_url='https://di.ncl.ac.uk/cdl/'+uId+'/buffer.json'
+uId=configure('uId')
+server=configure('server')
+buffer_url=server+uId+'/buffer.json'
 print buffer_url
-remove_url='https://di.ncl.ac.uk/cdl/remove_from_buffer.php'
+remove_url=server+'/remove_from_buffer.php'
 print remove_url
 import sys
 print "Starting"
 sys.path.append("/home/pi/cdl-skyline/r-pi")
+def configure(element,xml_file="/home/pi/cdl-skyline/r-pi/config.xml"):
+	'''Returns the text from the first appearance element in xml_file.
+	If the root tag is not "config" this will return None.
+	Takes:
+	element->str
+	Returns:
+	text->str/None
+	'''
+	tree=ET.parse(xml_file)
+	root=tree.getroot()
+	if root.tag == 'config':
+		text=root.find(element).text
+		return text
+	else:
+		return None
 def get_buffer(buffer_path=buffer_url):
 	'''Gets the buffer json data from buffer_path and converts it into a list.
 	Takes:

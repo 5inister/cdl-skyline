@@ -47,7 +47,7 @@ def configure(element,xml_file="/home/pi/cdl-skyline/r-pi/config.xml"):
 		return None
 uId=configure('uId')
 server=configure('server')
-buffer_url=server+uId+'/buffer.json'
+buffer_url=server+'/'+uId+'/buffer.json'
 print buffer_url
 remove_url=server+'/remove_from_buffer.php'
 print remove_url

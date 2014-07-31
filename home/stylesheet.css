@@ -17,11 +17,19 @@ h2{
 	font-size:32px;
 }
 #secret{
+	width:200px;
+	border: black 10px;
 	position: fixed;
 	left:300px;
 	top:200px;
 	z-index:10;
+	background-color:black;
 	visibility:hidden;
+}
+#categoryMenu{
+	color:white;
+	background-color:black;
+	text-align:center
 }
 #container{
 	/*overflow: scroll;*/

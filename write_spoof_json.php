@@ -22,10 +22,11 @@
       //choose a random category from the list
       
       //concatenate it with the extension
-          "fname" => $category.=".png",
+          "fname" => $category.".png",
           "iId" => rand(1000,4000),
           "dominant_category" => $category,
-          "visited" => 0
+          "visited" => 0,
+		  "url"=> "face.jpg"
     );
     # code...
     //add to our global array

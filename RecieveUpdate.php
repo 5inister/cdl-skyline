@@ -31,8 +31,14 @@ if (isset($_GET['challenge'])){
 				$visited=0;
 				//file_put_contents("data/upd_$c"."_$userID.txt","$url,$dt,$labels,$probability");
 				$this_new_item=array (
+				"fname"=>$fname,
+				"iId"=>$iId,
+				"dominant_category"=>$dominat_category,
 				"url"=>$url,
-				
+				"dt"=>$dt,
+				"labels"=>$labels,
+				"probability"=>$probability,
+				"visited"=>$visited,				
 				);
 				array_push($new_items,$this_new_item);
 				$c++;

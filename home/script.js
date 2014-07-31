@@ -45,6 +45,9 @@ $( document ).ready(function() {
 	 		$("#container").append(new_element);// "<p>Test</p>" );
 			$("#tile_"+i).css("left",(left_shift +(i*spacing))+"px");
 			$("#tile_"+i).data("iId", data[i].iId);
+			//TODO change to real URL
+			$("#tile_"+i).data("url", "../"+thisUId+"/images/"+data[i].url);
+			$("#tile_"+i).data("dominant_category", data[i].dominant_category);
 			if(i>=num_visible_elements+2+threshold_index){
 				$("#tile_"+i).css("visibility","hidden");
 			}
@@ -82,11 +85,12 @@ $( document ).ready(function() {
 		var visibility = $("#secret").css("visibility");
 		if(visibility=='hidden'){
 			var url = $("#tile_"+div_index).data("url");
-			console.log(url);
+			var category = $("#tile_"+div_index).data("dominant_category");
+			console.log($("#tile_"+div_index).data());
 			//for now use a spoof url
-			url = "images/face.jpg";
-			$("#secret").find("img").attr("src", url)
+			$("#secret").find("img").attr("src", url);
 			$("#secret").css("visibility","visible");
+			$("#categoryMenu").find("span").text(category);
 		}
 		else if (visibility=='visible'){
 			$("#secret").css("visibility","hidden");

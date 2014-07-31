@@ -9,7 +9,12 @@
 	<body>
 		<div id="bannerBlock"></div>
 		<div id= "container">
-			<div id= "secret"> <img  src=""></img> </div>
+			<div id= "secret"> 
+				<img  src=""></img>
+				<div id="categoryMenu">
+					<span id="currentCategory">AAAAAAA</span>
+				</div>
+			</div>
 		</div>
 		</div>
 		<div id="dudeContainer">

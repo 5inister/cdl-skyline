@@ -12,7 +12,7 @@
 			<div id= "secret"> 
 				<img  src=""></img>
 				<div id="categoryMenu">
-					<span id="currentCategory">AAAAAAA</span>
+					<span id="currentCategory"></span>
 				</div>
 			</div>
 		</div>
@@ -25,6 +25,9 @@
 		<div id="controls" class="mobile">
 			<div id="leftArrow">
 				<img id="leftBtn" src ="./images/leftArrow.png">
+			</div>
+			<div id="category">
+				<img id="categoryBtn" src ="./images/category.png">
 			</div>
 			<div id="rightArrow">
 				<img id="rightBtn" src ="./images/rightArrow.png">

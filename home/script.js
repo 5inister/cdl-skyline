@@ -76,10 +76,9 @@ $( document ).ready(function() {
 	});
 	$("#leftArrow").click(animateBackwards);
 	$("#rightArrow").click(animateForward);
+	$("#categoryBtn").click(function(){toggleShowPhoto(position_index)});
 	function hidePhoto(){
-		
 		$("#secret").css("visibility","hidden");
-
 	}
 	function toggleShowPhoto(div_index){
 		var visibility = $("#secret").css("visibility");

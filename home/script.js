@@ -10,7 +10,7 @@ $( document ).ready(function() {
 
 		//alert("Hello, " + response);
 
-	var useLogIn = true;
+	var useLogIn = false;
 
 	var thisUId;
 

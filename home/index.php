@@ -7,18 +7,29 @@
 </head>
 
 	<body>
-		<div id="bannerBlock"></div>
-		<div id= "container">
-			<div id= "secret"> <img  src=""></img> </div>
-		</div>
-		</div>
-		<div id="dudeContainer">
-			<div id="frame0">
-				<img id="dude" src="./images/dudeSprite.png" style="overflow: hidden; position: relative; z-index: 2; top: -151px; opacity: 1; width: 984px; height: 225px; left:0px; top:-75;"></img>
+		<div id="body_container">
+			
+
+			<div id= "container">
+				<div id= "secret"> 
+					<img  src=""></img> 
+					<div id="categoryMenu">
+					</div>
+				</div>
+			</div>
+			
+			<div id="dudeContainer">
+				<div id="mask">
+					<img id="dude" src="./images/dudeSprite.png" </img>
+				</div>
 			</div>
 		</div>
-	
+		<div id="controls" class="mobile">
+			<div class="control" id="leftArrow">left</div>
+			<div class="control" id="rightArrow">right</div>
+		</div>
 		
+
 		
 		
 	</body>

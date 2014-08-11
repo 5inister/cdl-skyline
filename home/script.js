@@ -20,7 +20,7 @@ $( document ).ready(function() {
 
 	
 	var spacing;
-	var categories = ['art','beliefs','celebration','family','food','friends','style','travel'];
+	var categories = ['art','beliefs','celebration','family','food','friends','leisure','old photos' ,'style','travel'];
 	var fontSize;
 	
 	if(detectmob()){
@@ -71,24 +71,62 @@ $( document ).ready(function() {
 	$('#secret').css('width',spacing).css('height',spacing);
 	$('#secret').find('img').click(function(){
 		toggleShowPhoto(position_index);
+		
 	});
 
 	for (var i = 0; i < categories.length; i++) {
 		categories[i];
 		var new_element = "<div class='category'>"+categories[i]+"</div>" ;
-		$("#secret").append(new_element);
+		$("#categoryMenu").append(new_element);
 	};
 	$('.category').css('font-size',fontSize+'pt');
-	$('.category').data('color','white');
-	$('.category').on('mouseenter', function(){
-		// console.log('mouse');
-		$(this).css('color','gray');
+	$('.category').css('color','gray');
+	$('.category').on('click', function(){
+		console.log('$("#tile_"+position_index).data id ' ,$("#tile_"+position_index).data('iId'));
+		var newDominantCategory = $(this).text();
+		 $.post( "../update_dominant_category.php", { uId: thisUId, newDominantCategory: $(this).text(), iId: $("#tile_"+position_index).data('iId') } , function( data ) {
+		 	console.log(data);
+
+		 	
+		 	$("#tile_"+position_index).data("dominant_category", newDominantCategory);
+		 	$('.category').css('color','gray');
+		 	
+		 	$('.category').each(function( index ) {	
+		 		
+		 		console.log(categories[index], newDominantCategory);
+
+				 if( $(this).data('category')==newDominantCategory){
+				 	
+				 	$(this).css('color','white');
+				// 	$(this).data('color','red');
+				 }
+				 else{
+				 	$(this).css('color','gray');
+				 }
+
+			});
+
+
+		 }, "json");
+
+		 $.post( "../update_categorised.php", { uId: thisUId, iId: $("#tile_"+position_index).data('iId') } , function( data ) {
+		 //	console.log(data);
+
+		 }, "json");
+
+		 //update src of tile and highlighting
+
+		
 	});
-	//bind the events to the elements we have just created
-	$('.category').on('mouseleave', function(){
-		// console.log('mouse');
-		$(this).css('color',$(this).data('color'));
-	});
+	// $('.category').on('mouseenter', function(){
+	// 	// console.log('mouse');
+	// 	$(this).css('color','red');
+	// });
+	// //bind the events to the elements we have just created
+	// $('.category').on('mouseleave', function(){
+	// 	// console.log('mouse');
+	// 	$(this).css('color',$(this).data('color'));
+	// });
 	
 
 	$('#controls').css('left','0px').css('top',spacing +'px');
@@ -102,11 +140,13 @@ $( document ).ready(function() {
 	
 	$("#leftArrow").click(animateBackwards);
 	$("#rightArrow").click(animateForward);
-	
 
+
+	$("#dude").css("left",0);
+	$("#dude").css("top",-doubleRowHeight);
 	// $("#categoryBtn").click(function(){toggleShowPhoto(position_index)});
 
-
+	///TODO add mapping from easy username
 	if(useLogIn){
 		var response = prompt("What is your userID?");
 		thisUId = response;
@@ -149,6 +189,8 @@ $( document ).ready(function() {
 			$("#tile_"+i).css("left",(left_shift +(i*spacing))+"px");
 			$("#tile_"+i).find('img').css("width",(spacing)+"px");
 			$("#tile_"+i).data("iId", data[i].iId);
+
+			$("#tile_"+i).data("probabilities", data[i].probability);
 			//TODO change to real URL
 			$("#tile_"+i).data("url", "../"+thisUId+"/images/"+data[i].url);
 			$("#tile_"+i).data("dominant_category", data[i].dominant_category);
@@ -156,6 +198,11 @@ $( document ).ready(function() {
 			//bind our click event
 			$("#tile_"+i).on('click', function(){
 				toggleShowPhoto(position_index);
+				console.log('called script for ' ,$("#tile_"+position_index).data('iId'), ' and user ',thisUId);
+		
+		$.post( "../update_viewed.php", { uId: thisUId,  iId: $("#tile_"+position_index).data('iId') } , function( data ) {
+		 //	console.log(data);
+		 }, "json");
 			});
 			//hide the far away elements
 			if(i>=num_visible_elements+2+threshold_index){
@@ -190,6 +237,13 @@ $( document ).ready(function() {
 	function hidePhoto(){
 		$("#secret").css("visibility","hidden");
 	}
+	function compare(a,b) {
+		  if (a.probability > b.probability)
+		     return -1;
+		  if (a.probability < b.probability)
+		    return 1;
+		  return 0;
+		}
 	
 	function toggleShowPhoto(div_index){
 		
@@ -205,17 +259,47 @@ $( document ).ready(function() {
 			//TODO revise when we are sure how the categories are coming out of the json - ie with or without a file extension
 			var categoryFname = $("#tile_"+div_index).data("dominant_category");
 			var category =categoryFname.split('.')[0];
-			console.log('dominant_category ',category);
+
+			//console.log('dominant_category ',category);
+			
+
+			var probabilities = $("#tile_"+div_index).data("probabilities");
+			
+			var menuList = [];
+			//make an array of objects which we can then sort by key
+			for (var i = 0; i < probabilities.length; i++) {
+				probabilities[i];
+				var o = [];//{probabilities[i],categories[i]};
+				
+				o['probability']=probabilities[i];
+	   		 	o['category']= categories[i];
+	   		 	menuList.push(o);
+			};
+			//console.log(menuList);
+			menuList.sort(compare);
+			
+			//console.log(menuList);
 			
 			$('.category').each(function( index ) {
-				console.log($(this).text());
-				$(this).data('color','white');
-				$(this).css('color','white');
-				if($(this).text()==category){
-					$(this).css('color','red');
-					$(this).data('color','red');
-				}
+				console.log(menuList[index]['category'],menuList[index]['probability']);
+				// console.log($(this).text());
+				$(this).text(menuList[index]['category']);
+				$(this).data('category',menuList[index]['category'] );
+				// $(this).data('color','white');
+				// $(this).css('color','white');
+				 if(menuList[index]['category']==category){
+				 	$(this).css('color','white');
+				// 	$(this).data('color','red');
+				 }
+				 else{
+				 	$(this).css('color','gray');
+				 }
+
 			});
+			
+			var menuHeight = (window.innerHeight - spacing);
+			//console.log(menuHeight);
+			$("#categoryMenu").css('height',menuHeight+'px');
 			//for now use a spoof url
 			url = '../'+thisUId+'/images/photo.jpg';
 
@@ -228,13 +312,13 @@ $( document ).ready(function() {
 				// $('.category').width(photoWidth);
 				//if landscape
 				if(photoWidth>photoHeight){
-					console.log('landscape');
+				//	console.log('landscape');
 					$("#secret").find("img").width(spacing+'px');
 					$("#secret").find("img").height('auto');
 				}
 				//if portrait
 				else if(photoHeight>photoWidth){
-					console.log('portrait');
+				//	console.log('portrait');
 					$("#secret").find("img").height(spacing+'px');
 					$("#secret").find("img").width('auto');
 				}
@@ -247,7 +331,7 @@ $( document ).ready(function() {
 			});
 
 			$("#secret").css("visibility","visible");
-			$("#secret").css('display','none').fadeIn( "slow");
+			//$("#secret").css('display','none');//.fadeIn( "fast");
 			// $("#categoryMenu").find("span").text(category);
 
 		}

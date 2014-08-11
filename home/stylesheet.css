@@ -105,7 +105,8 @@ h2{
 #categoryMenu{
 	color:white;
 	background-color:black;
-	text-align:center
+	text-align:center;
+	overflow: scroll;
 }
 .category{
 	color:white;

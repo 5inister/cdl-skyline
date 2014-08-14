@@ -64,7 +64,7 @@
 
       //take a chunk of what's left
 
-      $current_prob=rand(0,$remaining_prob);
+      $current_prob=rand(0, 100);//$remaining_prob);
 
       $remaining_prob -= $current_prob;
 
@@ -74,7 +74,7 @@
 
     //the final one is the left overs
 
-    array_push($probabilities,$remaining_prob/100);
+    array_push($probabilities,rand(0, 100)/100 );//$remaining_prob/100);
 
     
 
@@ -134,7 +134,7 @@
 
 
 
-    $fs = fopen("skyline.json","w");
+    $fs = fopen("./USER000/skyline.json","w");
 
     //echo this out as json
 

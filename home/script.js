@@ -18,12 +18,24 @@ $( document ).ready(function() {
 	      }
     }
 
-	
+	//spacing is the main variable defining the width and height of one category image
 	var spacing;
 	var categories = ['art','beliefs','celebration','family','food','friends','leisure','old photos' ,'style','travel'];
+	//should be set according to the user agent
 	var fontSize;
+	//this is the main index defining which tile is currently active
+	var position_index =0;
+
+	var userNameMap = [];
+	var useMobile = false;
+
+	var user_0 = []
+	userNameMap['5inister']='USER000';
+	userNameMap['5555555inister']='USER000jalskdghaklsjdlkajhsdlkgfhjadlk';
+
 	
 	if(detectmob()){
+		useMobile = true;
 		spacing = window.innerWidth;
 		fontSize =36;
 	}
@@ -38,7 +50,7 @@ $( document ).ready(function() {
 	var padding= spacing*0.02;
 
 	var sort_type = 1;
-	var position_index =0;
+	
 	var is_moving = false;
 	var num_elements = 0;
 	var num_visible_elements = 6;
@@ -51,7 +63,8 @@ $( document ).ready(function() {
 
 
 	var cellProportion = 76/82;
-	var cellHeight = cellWidth*cellProportion;
+	var bleed = 1;
+	var cellHeight = (cellWidth*cellProportion)-bleed;
 
 	var imageWidth = cellWidth*12;
 	var imageHeight = cellHeight*3;
@@ -113,21 +126,8 @@ $( document ).ready(function() {
 		 //	console.log(data);
 
 		 }, "json");
-
-		 //update src of tile and highlighting
-
 		
 	});
-	// $('.category').on('mouseenter', function(){
-	// 	// console.log('mouse');
-	// 	$(this).css('color','red');
-	// });
-	// //bind the events to the elements we have just created
-	// $('.category').on('mouseleave', function(){
-	// 	// console.log('mouse');
-	// 	$(this).css('color',$(this).data('color'));
-	// });
-	
 
 	$('#controls').css('left','0px').css('top',spacing +'px');
 	
@@ -149,20 +149,34 @@ $( document ).ready(function() {
 	///TODO add mapping from easy username
 	if(useLogIn){
 		var response = prompt("What is your userID?");
-		thisUId = response;
+		thisUId = userNameMap[response];
 	}
 	else{
-		thisUId = "USER000";
+		thisUId = userNameMap["5inister"];
 	}
 
 	$('#mask').css('width',cellWidth+'px').css('height',singleRowHeight+'px').css('top',(spacing-cellHeight)+'px' );
 	$('#mask').find('img').css('width',imageWidth+'px').css('height',imageHeight+'px');
 	var imageSource0 ="../"+thisUId+"/images/dudeSprite.png"
 	
-	
+	var logInSuccess = false;
 	$.post( "../get_skyline.php", {  uId: thisUId } , function( data ) {
 		var found_start_pos = false;
 		//console.log(data);
+		if(data!==null) {
+			logInSuccess = true;
+			console.log('login success');
+		}
+		else{
+			console.log('login failure');
+			$('#body_container').remove();
+			$('#controls').remove();
+			$('#secret').remove();
+			$('#dudeContainer').remove();
+
+			var new_element = "<div id='failureMessage' > Your login was not correct. Please try again</div>" ;
+			$("body").append(new_element).css('color','white');
+		}
 		for (var i = 0; i < data.length; i++) {				
 		//if this picture is the first to be flagged as not yet visited set the start position to the picture left of it
 
@@ -171,6 +185,9 @@ $( document ).ready(function() {
 				found_start_pos = true;
 			}
 		}
+		
+		
+
 		for (var i = 0; i < data.length; i++) {
 			// console.log(data[i]);
 			//a global to tell us how many divs we have
@@ -187,9 +204,13 @@ $( document ).ready(function() {
 
 	 		$("#container").append(new_element);// "<p>Test</p>" );
 			$("#tile_"+i).css("left",(left_shift +(i*spacing))+"px");
-			$("#tile_"+i).find('img').css("width",(spacing)+"px");
-			$("#tile_"+i).data("iId", data[i].iId);
+			// $("#tile_"+i).css("border-left","solid 2px");
+			// $("#tile_"+i).css("border-right","solid 2px");
+			// $("#tile_"+i).css("border-color","white");
 
+			$("#tile_"+i).find('img').css("width",(spacing+1)+"px");
+			$("#tile_"+i).data("iId", data[i].iId);
+			$("#tile_"+i).data("index",i);
 			$("#tile_"+i).data("probabilities", data[i].probability);
 			//TODO change to real URL
 			$("#tile_"+i).data("url", "../"+thisUId+"/images/"+data[i].url);
@@ -197,24 +218,27 @@ $( document ).ready(function() {
 
 			//bind our click event
 			$("#tile_"+i).on('click', function(){
-				toggleShowPhoto(position_index);
-				console.log('called script for ' ,$("#tile_"+position_index).data('iId'), ' and user ',thisUId);
+				console.log('index is ',$(this).data('index'));//
+				if($(this).data('index')==position_index){
+					toggleShowPhoto(position_index);
+				}
+				
 		
-		$.post( "../update_viewed.php", { uId: thisUId,  iId: $("#tile_"+position_index).data('iId') } , function( data ) {
-		 //	console.log(data);
-		 }, "json");
-			});
+				$.post( "../update_viewed.php", { uId: thisUId,  iId: $("#tile_"+position_index).data('iId') } , function( data ) {
+				 //	console.log(data);
+				 	}, "json");
+				});
 			//hide the far away elements
-			if(i>=num_visible_elements+2+threshold_index){
-				$("#tile_"+i).css("visibility","hidden");
-			}
-		};
-		var first_iId=$("#tile_"+position_index).data('iId');
-		$.post( "../update_skyline.php", {uId: thisUId, iId: first_iId}, function(data) { //Mark the first tile visited
-			console.log("updated skyline with this iId ",first_iId);
-		});
+				if(i>=num_visible_elements+2+threshold_index){
+					$("#tile_"+i).css("visibility","hidden");
+				}
+			};
+			var first_iId=$("#tile_"+position_index).data('iId');
+			$.post( "../update_skyline.php", {uId: thisUId, iId: first_iId}, function(data) { //Mark the first tile visited
+				console.log("updated skyline with this iId ",first_iId);
+			});
 
-	}, "json");
+		}, "json");
 
 	var speed = 1000;
 	var distance = spacing;
@@ -248,10 +272,12 @@ $( document ).ready(function() {
 	function toggleShowPhoto(div_index){
 		
 		var visibility = $("#secret").css("visibility");
+		//if it's hidden then show it
 		if(visibility=='hidden'){
 			//hide the buttons
 			$("#controls").css('visibility','hidden');
-
+			$("#dudeContainer").css('visibility','hidden');
+			$("#tile"+div_index).css('visibility','hidden');
 
 			//get the data we need from the data attributed of the dom element
 			var url = $("#tile_"+div_index).data("url");
@@ -330,16 +356,23 @@ $( document ).ready(function() {
 				$('.category').width($("#secret").find("img").width());
 			});
 
-			$("#secret").css("visibility","visible");
+			setTimeout(setVisibility, 500);
+			
 			//$("#secret").css('display','none');//.fadeIn( "fast");
 			// $("#categoryMenu").find("span").text(category);
 
 		}
+		//otherwise hide it
 		else if (visibility=='visible'){
 			$("#secret").css("visibility","hidden");
 			$("#controls").css('visibility','visible');
+			$("#dudeContainer").css('visibility','visible');
+			$("#tile"+div_index).css('visibility','visible');
 		}
 	}
+	function setVisibility(){
+				$("#secret").css("visibility","visible")
+			}
 	function getIDofClosestTile(){
 		var id=0;
 		//console.log(id);

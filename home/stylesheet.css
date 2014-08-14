@@ -63,6 +63,9 @@ h2{
 #dudeContainer{
 	
     position:absolute;
+    visibility: visible;
+    /*this will reposition the whole dude*/
+    top:10px;
 }
 #mask{
     overflow: hidden;

@@ -15,15 +15,42 @@ import urllib2
 import json
 from time import sleep,strftime,gmtime
 import Image
+import subprocess
+import xml.etree.ElementTree as ET
 #import py-thermal-printer THIS IS A MODIFIED VERSION OF luopio's library
 import printer
-#TODO Read uId from a config file
-uId='USER000' #For now while we get the correct uId from config
-buffer_url='https://di.ncl.ac.uk/cdl/'+uId+'/buffer.json'
-print buffer_url
-remove_url='https://di.ncl.ac.uk/cdl/remove_from_buffer.php'
-print remove_url
+import RPi.GPIO as GPIO
+#Enable printer power on pin 11 (GPIO 17)
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(13,GPIO.OUT)
+GPIO.output(13,GPIO.HIGH)
+GPIO.setup(11,GPIO.OUT)
+GPIO.output(11,GPIO.HIGH)
+GPIO.setup(12,GPIO.IN,pull_up_down=GPIO.PUD_UP)
+import sys
 print "Starting"
+sys.path.append("/home/pi/cdl-skyline/r-pi")
+def configure(element,xml_file="/home/pi/cdl-skyline/r-pi/config.xml"):
+	'''Returns the text from the first appearance element in xml_file.
+	If the root tag is not "config" this will return None.
+	Takes:
+	element->str
+	Returns:
+	text->str/None
+	'''
+	tree=ET.parse(xml_file)
+	root=tree.getroot()
+	if root.tag == 'config':
+		text=root.find(element).text
+		return text
+	else:
+		return None
+uId=configure('uId')
+server=configure('server')
+buffer_url=server+'/'+uId+'/buffer.json'
+print buffer_url
+remove_url=server+'/remove_from_buffer.php'
+print remove_url
 def get_buffer(buffer_path=buffer_url):
 	'''Gets the buffer json data from buffer_path and converts it into a list.
 	Takes:
@@ -86,6 +113,20 @@ def byte_print(byte_file_path,serialport='/dev/ttyAMA0'):
 	thermal.print_from_byte_file(byte_file_path)
 	print("printing %s" % byte_file_path)
 	return 1
+def shutdown(button_pin=12):
+	'''Shuts down the printer when a button is pressed, default 
+	button pin is 12 (18 on BCM2835).
+	Takes:
+	button_pin ->int
+	Returns:
+	Nothing
+	'''
+	state=GPIO.input(12)
+	if state == 0:
+		print("Shutdown signal detected")
+		GPIO.output(11,GPIO.LOW)
+		subprocess.call(['shutdown','-h','now'])
+	sleep(0.15)
 def main():
 	'''The main function, it performs the following tasks:
 	Every 5 seconds get the buffer.
@@ -104,6 +145,7 @@ def main():
 				path='images/'+item['fname'].split('.')[0]+'.dat'
 				byte_print(path)
 			except IOError:
+				print path
 				path='images/'+item['fname']
 				image_print(path)
 			echoed=remove_from_buffer(item['iId'])
@@ -111,7 +153,10 @@ def main():
 			if echoed == "0":
 				break
 	else:
-		sleep(0.1)
+		sleep(0.05)
+	shutdown()
+	
+		
 while __name__=="__main__":
 	try:
 		main()

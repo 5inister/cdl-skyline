@@ -25,8 +25,8 @@
 			</div>
 		</div>
 		<div id="controls" class="mobile">
-			<div class="control" id="leftArrow">left</div>
-			<div class="control" id="rightArrow">right</div>
+			<div class="control" id="leftArrow"><img src="./images/leftArrow.png" alt="left"></div>
+			<div class="control" id="rightArrow"><img src="./images/rightArrow.png" alt="right"></div>
 		</div>
 		
 

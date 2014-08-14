@@ -7,34 +7,29 @@
 </head>
 
 	<body>
-		<div id="bannerBlock"></div>
-		<div id= "container">
-			<div id= "secret"> 
-				<img  src=""></img>
-				<div id="categoryMenu">
-					<span id="currentCategory"></span>
+		<div id="body_container">
+			
+
+			<div id= "container">
+				<div id= "secret"> 
+					<img  src=""></img> 
+					<div id="categoryMenu">
+					</div>
+				</div>
+			</div>
+			
+			<div id="dudeContainer">
+				<div id="mask">
+					<img id="dude" src="./images/dudeSprite.png" </img>
 				</div>
 			</div>
 		</div>
-		</div>
-		<div id="dudeContainer">
-			<div id="frame0">
-				<img id="dude" src="./images/dudeSprite.png" style="position: relative; top: -151px; opacity: 1; width: 984px; height: 225px; left:0px; top:-75;"></img>
-			</div>
-		</div>
 		<div id="controls" class="mobile">
-			<div id="leftArrow">
-				<img id="leftBtn" src ="./images/leftArrow.png">
-			</div>
-			<div id="category">
-				<img id="categoryBtn" src ="./images/category.png">
-			</div>
-			<div id="rightArrow">
-				<img id="rightBtn" src ="./images/rightArrow.png">
-			</div>
+			<div class="control" id="leftArrow"><img src="./images/leftArrow.png" alt="left"></div>
+			<div class="control" id="rightArrow"><img src="./images/rightArrow.png" alt="right"></div>
 		</div>
-
 		
+
 		
 		
 	</body>

@@ -20,7 +20,7 @@ $( document ).ready(function() {
 
 	//spacing is the main variable defining the width and height of one category image
 	var spacing;
-	var categories = ['art','beliefs','celebration','family','food','friends','leisure','old photos' ,'style','travel'];
+	var categories = ['art','beliefs','celebration','family','food','friends','leisure','old photos' ,'style','travel','uncategorised'];
 	//should be set according to the user agent
 	var fontSize;
 	//this is the main index defining which tile is currently active
@@ -127,7 +127,9 @@ $( document ).ready(function() {
 		 //	console.log(data);
 
 		 }, "json");
-		
+		var newUrl = "../"+thisUId+"/images/"+newDominantCategory+".png";
+		$("#tile_"+position_index).data("url", newUrl);
+		$("#tile_"+position_index).find('img').attr('src', newUrl);
 	});
 
 	$('#controls').css('left','0px').css('top',spacing +'px');
@@ -304,7 +306,7 @@ $( document ).ready(function() {
 			
 			var menuList = [];
 			//make an array of objects which we can then sort by key
-			for (var i = 0; i < probabilities.length; i++) {
+			for (var i = 0; i < categories.length; i++) {
 				probabilities[i];
 				var o = [];//{probabilities[i],categories[i]};
 				

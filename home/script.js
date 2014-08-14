@@ -28,7 +28,8 @@ $( document ).ready(function() {
 
 	var userNameMap = [];
 	var useMobile = false;
-
+	var thisUId;
+	var useLogIn = false;
 	var user_0 = []
 	userNameMap['5inister']='USER000';
 	userNameMap['5555555inister']='USER000jalskdghaklsjdlkajhsdlkgfhjadlk';
@@ -56,8 +57,8 @@ $( document ).ready(function() {
 	var num_visible_elements = 6;
 	//make ajax call - run php script which will return contents of our json file into array called data
 		//alert("Hello, " + response);
-	var useLogIn = false;
-	var thisUId;
+	
+	
 
 	var cellWidth = spacing*0.3;
 
@@ -135,8 +136,16 @@ $( document ).ready(function() {
 	$('.control').css('margin',(margin)+'px');
 	$('.control').css('padding',padding+'px');
 	
-	$('#rightArrow').css('left',(spacing-($('#rightArrow').width()+(2*(padding+margin))) )).css('top',(margin+padding)+'px');
-	$('#leftArrow').css('left',margin+'px').css('top',(margin+padding)+'px');
+
+	$('#rightArrow').find('img').load(function(){
+		console.log('loaded');
+		var offset = $('#rightArrow').width();
+		console.log('offset ',offset);
+		var rightArrow =spacing - ((2*padding)+offset+(2*margin)); 
+		$('#rightArrow').css('left',rightArrow).css('top',(margin+padding)+'px');
+		$('#leftArrow').css('left',margin+'px').css('top',(margin+padding)+'px');
+		}
+	);
 	
 	$("#leftArrow").click(animateBackwards);
 	$("#rightArrow").click(animateForward);
@@ -160,9 +169,11 @@ $( document ).ready(function() {
 	var imageSource0 ="../"+thisUId+"/images/dudeSprite.png"
 	
 	var logInSuccess = false;
+	
 	$.post( "../get_skyline.php", {  uId: thisUId } , function( data ) {
 		var found_start_pos = false;
-		//console.log(data);
+
+		console.log(data);
 		if(data!==null) {
 			logInSuccess = true;
 			console.log('login success');
@@ -211,7 +222,7 @@ $( document ).ready(function() {
 			$("#tile_"+i).find('img').css("width",(spacing+1)+"px");
 			$("#tile_"+i).data("iId", data[i].iId);
 			$("#tile_"+i).data("index",i);
-			$("#tile_"+i).data("probabilities", data[i].probability);
+			$("#tile_"+i).data("probabilities", data[i].probabilities);
 			//TODO change to real URL
 			$("#tile_"+i).data("url", "../"+thisUId+"/images/"+data[i].url);
 			$("#tile_"+i).data("dominant_category", data[i].dominant_category);

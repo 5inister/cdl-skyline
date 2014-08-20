@@ -23,7 +23,7 @@ if (isset($_GET['challenge'])){
 					$dominat_category='uncategorised';
 				}
 				else{
-					$dominat_category=labels[$dominant_category_index];
+					$dominat_category=$labels[$dominant_category_index];
 				}
 				$fname=$dominat_category.".png";
 				$url_parts=explode('/',$url);

@@ -11,7 +11,9 @@
 	//echo $file;
 	//get the json from the file
 	$existingJson = json_decode(file_get_contents($file), true);
-
+	while ($existingJson[0]==null){
+		$existingJson = json_decode(file_get_contents($file), true);
+	}
 	//go through it hunting for this iId
 	for ($i=0; $i <sizeof($existingJson) ; $i++) { 
 		//when we find it update the visited flag
@@ -27,6 +29,14 @@
 	//rencode the json and write back
 	fwrite( $fs, json_encode($existingJson));
 	fclose($fs);
+	//Check that json got written
+	$just_written_json=json_decode(file_get_contents($file), true);
+	while($just_written_json[0] == null){
+		$fs = fopen($file,"w");
+		fwrite( $fs, json_encode($existingJson));
+		fclose($fs);
+		$just_written_json=json_decode(file_get_contents($file), true);
+	}
 	// $response = array();
 	// array_push($response,$newDominantCategory);
 	// echo json_encode($response);

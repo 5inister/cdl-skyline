@@ -2,10 +2,7 @@
 	//open the json, find the iId we have landed on in the javascript and update the 'visited variable. then write out the json again'
 	$dir = $_POST["uId"];//'USER000';//
 	$iId = $_POST["iId"];//'3698';
-	
-
 	$file = $dir .'/'. 'skyline.json';
-
 	echo $file;
 	//get the json from the file
 	$existingJson = json_decode(file_get_contents($file), true);
@@ -28,17 +25,23 @@
 				//load the buffer
 				$bufferFile = $dir .'/'. 'buffer.json';
 				$bufferJson = json_decode(file_get_contents($bufferFile), true);
-				
 				//if this is the first time then declare an array to push in to.
 				if(sizeof($bufferJson)==0)$bufferJson = array();
-
 				array_push($bufferJson, $bufferItem);
-
 				$fs1 = fopen($bufferFile,"w");
 				//rencode the json and write back
 				fwrite( $fs1, json_encode($bufferJson));
 				fclose($fs1);
-
+				
+				//Load the category histogram
+				$histogramFile = $dir .'/'. 'histogram.json';
+				$histogramJson = json_decode(file_get_contents($histogramFile), true);
+				//Add one to this tile's category
+				$histogramJson[$existingJson[$i]["dominant_category"]] += 1;
+				//Re-write json
+				$fs2 = fopen($histogramFile,"w");
+				fwrite( $fs2, json_encode($histogramJson));
+				fclose($fs2);
 				$existingJson[$i]["visited"] =1;
 			}
 

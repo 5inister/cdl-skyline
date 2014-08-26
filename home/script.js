@@ -160,8 +160,16 @@ $( document ).ready(function() {
 
 	///TODO add mapping from easy username
 	if(useLogIn){
-		var response = prompt("What is your userID?");
-		thisUId = userNameMap[response];
+	    //var fbid_div = document.getElementById("fbidDiv");
+		var uid=($("#fbidDiv").text()).trim();
+		console.log(uid);
+		if (uid==""){
+			var response = prompt("What is your userID?");
+			thisUId = userNameMap[response];
+		}
+		else{
+			thisUId=uid;
+		}
 	}
 	else{
 		thisUId = userNameMap["5inister"];
@@ -175,7 +183,6 @@ $( document ).ready(function() {
 	
 	$.post( "../get_skyline.php", {  uId: thisUId } , function( data ) {
 		var found_start_pos = false;
-
 		console.log(data);
 		if(data!==null) {
 			logInSuccess = true;

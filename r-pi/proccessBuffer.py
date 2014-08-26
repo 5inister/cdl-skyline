@@ -20,11 +20,11 @@ import xml.etree.ElementTree as ET
 #import py-thermal-printer THIS IS A MODIFIED VERSION OF luopio's library
 import printer
 import RPi.GPIO as GPIO
-#Enable printer power on pin 11 (GPIO 17)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(13,GPIO.OUT)
 GPIO.output(13,GPIO.HIGH)
 GPIO.setup(11,GPIO.OUT)
+#Enable printer power on pin 11 (GPIO 17)
 GPIO.output(11,GPIO.HIGH)
 GPIO.setup(12,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 import sys
@@ -127,6 +127,20 @@ def shutdown(button_pin=12):
 		GPIO.output(11,GPIO.LOW)
 		subprocess.call(['shutdown','-h','now'])
 	sleep(0.15)
+def check_internet(server_url=server):
+	'''Ties to connect to reach the specified server and returns
+	true if possible and false if not possible.
+	Takes:
+	servr_url->str
+	Returns:
+	Ture/False->Bool
+	'''
+	try:
+		response=urllib2.urlopen(server_url,timeout=1)
+		return True
+	except urllib2.URLError as err: 
+		pass
+	return False
 def main():
 	'''The main function, it performs the following tasks:
 	Every 5 seconds get the buffer.
@@ -137,6 +151,13 @@ def main():
 	Returns:
 	nothing
 	'''
+	is_internet=check_internet()
+	while is_internet==False:
+		GPIO.output(13,GPIO.LOW)
+		sleep(1)
+		GPIO.output(13,GPIO.HIGH)
+		sleep(1)
+	GPIO.output(13,GPIO.HIGH)
 	buffer=get_buffer()
 	if len(buffer)>0:
 		print "Got %d items in buffer" % len(buffer)
@@ -161,10 +182,11 @@ while __name__=="__main__":
 	try:
 		main()
 	except urllib2.URLError:
+		GPIO.output(13,GPIO.LOW)
 		time=strftime("%Y-%m-%d %H:%M:%S", gmtime())
 		print(time+" urllib2.URLError, retrying in 3 minutes.")
 		with open("systemdown.log","a") as sysDown:
 			sysDown.write("System down, attempted restart at: "+time+"\n")
-		sleep(180)
+		sleep(30)
 		print("re-starting")
 		main()

@@ -20,26 +20,28 @@ if (isset($_GET['challenge'])){
 				$probability = $it['confidence'];
 				$dominant_category_index= array_keys($probability, max($probability));
 				if (count($dominant_category_index)>1){
-					$dominat_category='uncategorised';
+					$dominant_category='uncategorised';
 				}
 				else{
-					$dominat_category=$labels[$dominant_category_index];
+					$dominant_category=$labels[$dominant_category_index];
 				}
-				$fname=$dominat_category.".png";
+				$fname=$dominant_category.".png";
 				$url_parts=explode('/',$url);
 				$iId=end(explode('_',end($url_parts)));
 				$visited=0;
 				//file_put_contents("data/upd_$c"."_$userID.txt","$url,$dt,$labels,$probability");
 				$this_new_item=array (
-				"fname"=>$fname,
-				"iId"=>$iId,
-				"dominant_category"=>$dominat_category,
-				"url"=>$url,
-				"dt"=>$dt,
-				"labels"=>$labels,
-				"probability"=>$probability,
-				"visited"=>$visited,				
-				);
+					"fname"=>$fname,
+					"iId"=>$iId,
+					"dominant_category"=>$dominant_category,
+					"url"=>$url,
+					"dt"=>$dt,
+					"labels"=>$labels,
+					"probability"=>$probability,
+					"visited"=>$visited,
+					"hasBeenViewed"=>false,
+					"hasBeenCategorised"=>false
+				); 
 				array_push($new_items,$this_new_item);
 				$c++;
 			}

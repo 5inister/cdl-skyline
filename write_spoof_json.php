@@ -20,7 +20,7 @@
 
   array_push($categories, 'leisure');
 
-  array_push($categories, 'old photos');
+  array_push($categories, 'old_photos');//GONE for now!
 
   array_push($categories, 'style');
 

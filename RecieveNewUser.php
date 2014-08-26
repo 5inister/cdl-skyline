@@ -12,18 +12,31 @@ if (isset($_GET['challenge'])){
 			$items = $jsobj['items'];
 			$c = 0;
 			$new_items=array();
+			$category_list=array('art','beliefs','family','food','friends','travel','celebration','style','leisure');
 			foreach ($items as $it){
                 $tm=time();
-				$url = $it['url'];
-				$dt = $it['datetime'];
-				$labels = $it['labels'];
-				$probability = $it['confidence'];
+				$post_id = $it['id'];
+				$url = $it['PictureURL'];
+				$url_comment = $it['CommentURL'];
+				$dt = $it['UpdatedTime'];
+				$dt_create = $it['Date'];
+				
+				$labels = $it['Classification'];
+				$probability = $it['ClassificationProbability'];
+				
+				$probability_img = $it['PictureClassification'];
+				$probability_cmt = $it['CommentClassification'];
+				
+				$probability_post = $it['PostClassificationProbability'];
+				$probability_gallery = $it['GalleryClassificationProbability'];
+				
+				
 				$dominant_category_index= array_keys($probability, max($probability));
 				if (count($dominant_category_index)>1){
 					$dominant_category='uncategorised';
 				}
 				else{
-					$dominant_category=$labels[$dominant_category_index];
+					$dominant_category=$category_list[$dominant_category_index[0]];
 				}
 				$fname=$dominant_category.".png";
 				$url_parts=explode('/',$url);
@@ -38,7 +51,9 @@ if (isset($_GET['challenge'])){
 					"dt"=>$dt,
 					"labels"=>$labels,
 					"probability"=>$probability,
-					"visited"=>$visited				
+					"visited"=>$visited,
+					"hasBeenViewed"=>false,
+					"hasBeenCategorised"=>false
 				);
 				array_push($new_items,$this_new_item);
 				$c++;

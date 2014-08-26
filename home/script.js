@@ -1,5 +1,4 @@
 $( document ).ready(function() {
-
 	function detectmob() { 
 	    if( navigator.userAgent.match(/Android/i)
 	       || navigator.userAgent.match(/webOS/i)
@@ -20,7 +19,7 @@ $( document ).ready(function() {
 
 	//spacing is the main variable defining the width and height of one category image
 	var spacing;
-	var categories = ['art','beliefs','celebration','family','food','friends','leisure','old photos' ,'style','travel','uncategorised'];
+	var categories = ['art','beliefs','family','food','friends','travel','celebration','style','leisure','uncategorised'];
 	//should be set according to the user agent
 	var fontSize;
 	//this is the main index defining which tile is currently active
@@ -29,11 +28,12 @@ $( document ).ready(function() {
 	var userNameMap = [];
 	var useMobile = false;
 	var thisUId;
-	var useLogIn = false;
+	var useLogIn = true;
 	var user_0 = []
 	userNameMap['5inister']='USER000';
 	userNameMap['5555555inister']='USER000jalskdghaklsjdlkajhsdlkgfhjadlk';
-
+	userNameMap['test-user']='100006590832317';
+	userNameMap['']='';
 	
 	if(detectmob()){
 		useMobile = true;
@@ -129,7 +129,7 @@ $( document ).ready(function() {
 
 		 }, "json");
 		var newUrl = "../"+thisUId+"/images/"+newDominantCategory+".png";
-		$("#tile_"+position_index).data("url", newUrl);
+		$("#tile_"+position_index).data("fname", newUrl);
 		$("#tile_"+position_index).find('img').attr('src', newUrl);
 	});
 
@@ -225,9 +225,10 @@ $( document ).ready(function() {
 			$("#tile_"+i).find('img').css("width",(spacing+1)+"px");
 			$("#tile_"+i).data("iId", data[i].iId);
 			$("#tile_"+i).data("index",i);
-			$("#tile_"+i).data("probabilities", data[i].probabilities);
+			$("#tile_"+i).data("url","../../"+data[i].url);
+			$("#tile_"+i).data("probabilities", data[i].probability);
 			//TODO change to real URL
-			$("#tile_"+i).data("url", "../"+thisUId+"/images/"+data[i].url);
+			$("#tile_"+i).data("fname", "../"+thisUId+"/images/"+data[i].fname);
 			$("#tile_"+i).data("dominant_category", data[i].dominant_category);
 
 			//bind our click event
@@ -295,16 +296,9 @@ $( document ).ready(function() {
 
 			//get the data we need from the data attributed of the dom element
 			var url = $("#tile_"+div_index).data("url");
-			
-			//TODO revise when we are sure how the categories are coming out of the json - ie with or without a file extension
 			var categoryFname = $("#tile_"+div_index).data("dominant_category");
 			var category =categoryFname.split('.')[0];
-
-			//console.log('dominant_category ',category);
-			
-
 			var probabilities = $("#tile_"+div_index).data("probabilities");
-			
 			var menuList = [];
 			//make an array of objects which we can then sort by key
 			for (var i = 0; i < categories.length; i++) {
@@ -340,8 +334,8 @@ $( document ).ready(function() {
 			var menuHeight = (window.innerHeight - spacing);
 			//console.log(menuHeight);
 			$("#categoryMenu").css('height',menuHeight+'px');
-			//for now use a spoof url
-			url = '../'+thisUId+'/images/photo.jpg';
+			url = $("#tile_"+position_index).data("url");
+			//url = '../'+thisUId+'/images/photo.jpg';
 
 			//we need to make sure the new source image has loaded before we check the dimensions: hence this callback
 			$("#secret").find("img").attr("src", url).load(function() {

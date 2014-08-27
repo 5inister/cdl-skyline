@@ -26,7 +26,9 @@ GPIO.output(13,GPIO.HIGH)
 GPIO.setup(11,GPIO.OUT)
 #Enable printer power on pin 11 (GPIO 17)
 GPIO.output(11,GPIO.HIGH)
+#Detect edge falling on pin 12
 GPIO.setup(12,GPIO.IN,pull_up_down=GPIO.PUD_UP)
+GPIO.add_event_detect(12,GPIO.FALLING)
 import sys
 print "Starting"
 sys.path.append("/home/pi/cdl-skyline/r-pi")
@@ -123,6 +125,7 @@ def shutdown():
 	'''
 	print("Shutdown signal detected")
 	GPIO.output(11,GPIO.LOW)
+	GPIO.cleanup()
 	subprocess.call(['shutdown','-h','now'])
 	sleep(0.15)
 def check_internet(server_url=server):
@@ -149,13 +152,15 @@ def main():
 	Returns:
 	nothing
 	'''
-	GPIO.add_event_detect(12,GPIO.FALLING)
 	is_internet=check_internet()
 	while is_internet==False:
+		if GPIO.event_detected(12):
+			shutdown()
 		GPIO.output(13,GPIO.LOW)
 		sleep(1)
 		GPIO.output(13,GPIO.HIGH)
 		sleep(1)
+		is_internet=check_internet()
 	GPIO.output(13,GPIO.HIGH)
 	buffer=get_buffer()
 	if len(buffer)>0:
@@ -174,9 +179,7 @@ def main():
 				break
 	else:
 		sleep(0.05)	
-		
 while __name__=="__main__":
-	GPIO.add_event_detect(12,GPIO.FALLING)
 	try:
 		main()
 	except urllib2.URLError:

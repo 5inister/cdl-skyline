@@ -125,6 +125,7 @@ def shutdown():
 	'''
 	print("Shutdown signal detected")
 	GPIO.output(11,GPIO.LOW)
+	GPIO.output(13,GPIO.LOW)
 	GPIO.cleanup()
 	subprocess.call(['shutdown','-h','now'])
 	sleep(0.15)
@@ -190,6 +191,9 @@ while __name__=="__main__":
 			sysDown.write("System down, attempted restart at: "+time+"\n")
 		sleep(30)
 		print("re-starting")
-		main()
+	except (KeyboardInterrupt, SystemExit):
+		GPIO.output(11,GPIO.LOW)
+		GPIO.output(13,GPIO.LOW)
+		GPIO.cleanup()
 	if GPIO.event_detected(12):
 		shutdown()

@@ -113,19 +113,17 @@ def byte_print(byte_file_path,serialport='/dev/ttyAMA0'):
 	thermal.print_from_byte_file(byte_file_path)
 	print("printing %s" % byte_file_path)
 	return 1
-def shutdown(button_pin=12):
-	'''Shuts down the printer when a button is pressed, default 
-	button pin is 12 (18 on BCM2835).
+def shutdown():
+	'''Shuts down the printer and turns off the LED on
+	pin 11.
 	Takes:
 	button_pin ->int
 	Returns:
 	Nothing
 	'''
-	state=GPIO.input(12)
-	if state == 0:
-		print("Shutdown signal detected")
-		GPIO.output(11,GPIO.LOW)
-		subprocess.call(['shutdown','-h','now'])
+	print("Shutdown signal detected")
+	GPIO.output(11,GPIO.LOW)
+	subprocess.call(['shutdown','-h','now'])
 	sleep(0.15)
 def check_internet(server_url=server):
 	'''Ties to connect to reach the specified server and returns
@@ -151,6 +149,7 @@ def main():
 	Returns:
 	nothing
 	'''
+	GPIO.add_event_detect(12,GPIO.FALLING)
 	is_internet=check_internet()
 	while is_internet==False:
 		GPIO.output(13,GPIO.LOW)
@@ -174,11 +173,10 @@ def main():
 			if echoed == "0":
 				break
 	else:
-		sleep(0.05)
-	shutdown()
-	
+		sleep(0.05)	
 		
 while __name__=="__main__":
+	GPIO.add_event_detect(12,GPIO.FALLING)
 	try:
 		main()
 	except urllib2.URLError:
@@ -190,3 +188,5 @@ while __name__=="__main__":
 		sleep(30)
 		print("re-starting")
 		main()
+	if GPIO.event_detected(12):
+		shutdown()

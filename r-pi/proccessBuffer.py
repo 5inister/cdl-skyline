@@ -29,6 +29,7 @@ GPIO.output(11,GPIO.HIGH)
 #Detect edge falling on pin 12
 GPIO.setup(12,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 GPIO.add_event_detect(12,GPIO.FALLING)
+import signal
 import sys
 print "Starting"
 sys.path.append("/home/pi/cdl-skyline/r-pi")
@@ -143,6 +144,15 @@ def check_internet(server_url=server):
 	except urllib2.URLError as err: 
 		pass
 	return False
+def signal_handler(signal, frame):
+	'''A signal catcher for when system calls SIGTERM through
+	a killall command.
+	'''
+		print("SIGTERM recieved, terminatng")
+		GPIO.output(11,GPIO.LOW)
+		GPIO.output(13,GPIO.LOW)
+		GPIO.cleanup()
+        sys.exit(0)
 def main():
 	'''The main function, it performs the following tasks:
 	Every 5 seconds get the buffer.
@@ -180,6 +190,7 @@ def main():
 				break
 	else:
 		sleep(0.05)	
+signal.signal(signal.SIGTERM, signal_handler)
 while __name__=="__main__":
 	try:
 		main()

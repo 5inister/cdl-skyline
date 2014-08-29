@@ -194,10 +194,10 @@ signal.signal(signal.SIGTERM, signal_handler)
 while __name__=="__main__":
 	try:
 		main()
-	except urllib2.URLError:
+	except (urllib2.URLError,socket.timeout):
 		GPIO.output(13,GPIO.LOW)
 		time=strftime("%Y-%m-%d %H:%M:%S", gmtime())
-		print(time+" urllib2.URLError, retrying in 3 minutes.")
+		print(time+" urllib2.URLError, retrying in 30 seconds.")
 		with open("systemdown.log","a") as sysDown:
 			sysDown.write("System down, attempted restart at: "+time+"\n")
 		sleep(30)
@@ -206,5 +206,10 @@ while __name__=="__main__":
 		GPIO.output(11,GPIO.LOW)
 		GPIO.output(13,GPIO.LOW)
 		GPIO.cleanup()
+	except:
+		print("undefined error, rebooting")
+		GPIO.output(13,GPIO.LOW)
+		GPIO.cleanup()
+		subprocess.call(['shutdown','-r','now'])
 	if GPIO.event_detected(12):
 		shutdown()

@@ -1,7 +1,7 @@
 '''Small program that converts image files to .dat files containing one printer-
 readable byte per line. To use it type "$ python convertPix2bin.py <image_file>
 '''
-import Image
+from PIL import Image
 import sys
 input_f=sys.argv[-1]
 output_f=input_f.split('.')[0]+'.dat'

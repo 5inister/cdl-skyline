@@ -14,7 +14,7 @@ import urllib
 import urllib2
 import json
 from time import sleep,strftime,gmtime
-import Image
+from PIL import Image
 import subprocess
 import xml.etree.ElementTree as ET
 from socket import timeout

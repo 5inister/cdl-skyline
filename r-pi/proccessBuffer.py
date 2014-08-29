@@ -17,6 +17,7 @@ from time import sleep,strftime,gmtime
 import Image
 import subprocess
 import xml.etree.ElementTree as ET
+from socket import timeout
 #import py-thermal-printer THIS IS A MODIFIED VERSION OF luopio's library
 import printer
 import RPi.GPIO as GPIO
@@ -148,10 +149,10 @@ def signal_handler(signal, frame):
 	'''A signal catcher for when system calls SIGTERM through
 	a killall command.
 	'''
-		print("SIGTERM recieved, terminatng")
-		GPIO.output(11,GPIO.LOW)
-		GPIO.output(13,GPIO.LOW)
-		GPIO.cleanup()
+	print("SIGTERM recieved, terminatng")
+	GPIO.output(11,GPIO.LOW)
+	GPIO.output(13,GPIO.LOW)
+	GPIO.cleanup()
         sys.exit(0)
 def main():
 	'''The main function, it performs the following tasks:
@@ -194,7 +195,7 @@ signal.signal(signal.SIGTERM, signal_handler)
 while __name__=="__main__":
 	try:
 		main()
-	except (urllib2.URLError,socket.timeout):
+	except (urllib2.URLError,timeout):
 		GPIO.output(13,GPIO.LOW)
 		time=strftime("%Y-%m-%d %H:%M:%S", gmtime())
 		print(time+" urllib2.URLError, retrying in 30 seconds.")

@@ -104,17 +104,17 @@ def get_histogram(histogram_path=histogram_url):
 	response=urllib2.urlopen(histogram_path)
 	histogram_json=response.read()
 	try:
-		histogram=json.loads(buffer_json)
+		histogram=json.loads(histogram_json)
 	except ValueError:
 		histogram=None
 		attempts=0
 		while histogram==None and attempts<10:
 			print("Can not get JSON, re-try %d / 10" % attempts)
-			response=urllib2.urlopen(buffer_path)
+			response=urllib2.urlopen(histogram_path)
 			histogram_json=response.read()
 			histogram=json.loads(histogram_json)
 			attempts += 1
-	return buffer_list
+	return histogram
 def compute_path(histogram,category):
 	'''Defines what version of the image to use based on the categories frequency.
 	Takes:
@@ -124,13 +124,13 @@ def compute_path(histogram,category):
 	path->str
 	'''
 	path=""
-	frequency=histogram[image.decode('unicode-escape')]
+	frequency=histogram[category.decode('unicode-escape')]
 	if frequency>115:
 		path='images/v3/'+category
 	elif frequency>57:
-		path='images/v2'+category
+		path='images/v2/'+category
 	elif frequency>28:
-		path='images/v1'+category
+		path='images/v1/'+category
 	else:
 		path='images/'+category
 	return path
@@ -224,12 +224,10 @@ def main():
 			category=item['fname'].split('.')[0]
 			path=compute_path(histogram,category)
 			try:
-				path=path+'.dat'
-				byte_print(path)
+				byte_print(path+'.dat')
 			except IOError:
 				print path
-				path=path+'.png'
-				image_print(path)
+				image_print(path+'.png')
 			echoed=remove_from_buffer(item['iId'])
 			print "removed "+str(item['iId'])+" from buffer with status "+echoed
 			if echoed == "0":

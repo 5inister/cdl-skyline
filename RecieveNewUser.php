@@ -58,10 +58,7 @@ if (isset($_GET['challenge'])){
 				array_push($new_items,$this_new_item);
 				$c++;
 			}
-			$contents=file_get_contents($userID.'/skyline.json');
-			$existing_items=json_decode($contents,true);
-			$final_items=array_merge($existing_items,$new_items);
-			file_put_contents($userID.'/skyline.json',json_encode($final_items));
+			file_put_contents($userID.'/skyline.json',json_encode($new_items));
 			echo "1";
 		}else{
 			echo "2";

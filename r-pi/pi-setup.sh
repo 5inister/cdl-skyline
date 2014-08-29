@@ -11,10 +11,10 @@ cd jpeg-9c
 make
 sudo make install
 cd ~
-sudo ln -s /usr/lib/arm-linux-gnueabi/libjpeg.so /usr/lib
-sudo ln -s /usr/lib/arm-linux-gnueabi/libfreetype.so /usr/lib
-sudo ln -s /usr/lib/arm-linux-gnueabi/libz.so /usr/lib
 sudo apt-get install libjpeg-dev libfreetype6 libfreetype6-dev zlib1g-dev
+sudo ln -s /usr/lib/arm-linux-gnueabihf/libjpeg.so /usr/lib
+sudo ln -s /usr/lib/arm-linux-gnueabihf/libfreetype.so /usr/lib
+sudo ln -s /usr/lib/arm-linux-gnueabihf/libz.so /usr/lib
 sudo pip install pil
 echo "Adding auto login"
 sudo cp ~/cdl-skyline/r-pi/inittab /etc/

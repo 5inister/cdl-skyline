@@ -33,6 +33,7 @@ $( document ).ready(function() {
 	userNameMap['5inister']='USER000';
 	userNameMap['5555555inister']='USER000jalskdghaklsjdlkajhsdlkgfhjadlk';
 	userNameMap['test-user']='100006590832317';
+	userNameMap['lvh-p1']='100002179985407';
 	userNameMap['']='';
 	
 	if(detectmob()){

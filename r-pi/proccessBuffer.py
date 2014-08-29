@@ -55,6 +55,8 @@ buffer_url=server+'/'+uId+'/buffer.json'
 print buffer_url
 remove_url=server+'/remove_from_buffer.php'
 print remove_url
+histogram_url=server+'/'+uId+'/histogram.json'
+print histogram_url
 def get_buffer(buffer_path=buffer_url):
 	'''Gets the buffer json data from buffer_path and converts it into a list.
 	Takes:
@@ -92,6 +94,46 @@ def remove_from_buffer(itemId,user=uId,remove_php_path=remove_url):
 	response=urllib2.urlopen(remove_request)
 	echoed=response.read()
 	return str(echoed)
+def get_histogram(histogram_path=histogram_url):
+	'''Gets the histogram json data from buffer_path and converts it into a dictionary.
+	Takes:
+	histogram_path-> str (usually a url pointing to a *.json file)
+	Returns
+	histogram->dictionary
+	'''
+	response=urllib2.urlopen(histogram_path)
+	histogram_json=response.read()
+	try:
+		histogram=json.loads(buffer_json)
+	except ValueError:
+		histogram=None
+		attempts=0
+		while histogram==None and attempts<10:
+			print("Can not get JSON, re-try %d / 10" % attempts)
+			response=urllib2.urlopen(buffer_path)
+			histogram_json=response.read()
+			histogram=json.loads(histogram_json)
+			attempts += 1
+	return buffer_list
+def compute_path(histogram,category):
+	'''Defines what version of the image to use based on the categories frequency.
+	Takes:
+	histogram->dict
+	image->str
+	Returns
+	path->str
+	'''
+	path=""
+	frequency=histogram[image.decode('unicode-escape')]
+	if frequency>115:
+		path='images/v3/'+category
+	elif frequency>57:
+		path='images/v2'+category
+	elif frequency>28:
+		path='images/v1'+category
+	else:
+		path='images/'+category
+	return path
 def image_print(image_path,serialport='/dev/ttyAMA0'):
 	'''Prints the corresponding image file on paper.
 	Takes:
@@ -176,14 +218,17 @@ def main():
 	GPIO.output(13,GPIO.HIGH)
 	buffer=get_buffer()
 	if len(buffer)>0:
+		histogram=get_histogram()
 		print "Got %d items in buffer" % len(buffer)
 		for item in buffer:
+			category=item['fname'].split('.')[0]
+			path=compute_path(histogram,category)
 			try:
-				path='images/'+item['fname'].split('.')[0]+'.dat'
+				path=path+'.dat'
 				byte_print(path)
 			except IOError:
 				print path
-				path='images/'+item['fname']
+				path=path+'.png'
 				image_print(path)
 			echoed=remove_from_buffer(item['iId'])
 			print "removed "+str(item['iId'])+" from buffer with status "+echoed

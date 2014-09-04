@@ -21,7 +21,7 @@ from socket import timeout
 #import py-thermal-printer THIS IS A MODIFIED VERSION OF luopio's library
 import printer
 import RPi.GPIO as GPIO
-sleep(15)
+sleep(5)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(13,GPIO.OUT)
 GPIO.output(13,GPIO.HIGH)

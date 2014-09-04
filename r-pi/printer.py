@@ -78,7 +78,7 @@ class ThermalPrinter(object):
     # blank page may occur. The more heating interval, the more
     # clear, but the slower printing speed.
     #defaults are heatTime=8, heatInterval=2,heatingDots=7
-    def __init__(self, heatTime=170, heatInterval=2, heatingDots=8, serialport=SERIALPORT):
+    def __init__(self, heatTime=120, heatInterval=2, heatingDots=7, serialport=SERIALPORT):
         self.printer = serial.Serial(serialport, self.BAUDRATE, timeout=self.TIMEOUT)
         self.printer.write(self._ESC) # ESC - command
         self.printer.write(chr(64)) # @   - initialize
@@ -312,7 +312,7 @@ class ThermalPrinter(object):
         """
         counter = 0
         if output_png:
-            import Image, ImageDraw
+            from PIL import image, ImageDraw
             test_img = Image.new('RGB', (384, h))
             draw = ImageDraw.Draw(test_img)
 
@@ -411,7 +411,7 @@ if __name__ == '__main__':
     #p.print_markup(markup)
 
     # runtime dependency on Python Imaging Library
-    import Image, ImageDraw
+    from PIL import Image, ImageDraw
     #i = Image.open("example-lammas.png")
     #data = list(i.getdata())
     #w, h = i.size

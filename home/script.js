@@ -33,7 +33,7 @@ $( document ).ready(function() {
 	userNameMap['5inister']='USER000';
 	userNameMap['5555555inister']='USER000jalskdghaklsjdlkajhsdlkgfhjadlk';
 	userNameMap['test-user']='100006590832317';
-	userNameMap['lvh-p1']='100002179985407';
+	userNameMap['heereveld']='100002179985407';
 	userNameMap['']='';
 	
 	if(detectmob()){
@@ -159,7 +159,6 @@ $( document ).ready(function() {
 	$("#dude").css("top",-doubleRowHeight);
 	// $("#categoryBtn").click(function(){toggleShowPhoto(position_index)});
 
-	///TODO add mapping from easy username
 	if(useLogIn){
 	    //var fbid_div = document.getElementById("fbidDiv");
 		var uid=($("#fbidDiv").text()).trim();
@@ -307,6 +306,7 @@ $( document ).ready(function() {
 			var categoryFname = $("#tile_"+div_index).data("dominant_category");
 			var category =categoryFname.split('.')[0];
 			var probabilities = $("#tile_"+div_index).data("probabilities");
+			console.log(probabilities);
 			var menuList = [];
 			//make an array of objects which we can then sort by key
 			for (var i = 0; i < categories.length; i++) {

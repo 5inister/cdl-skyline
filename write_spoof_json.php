@@ -20,7 +20,7 @@
 
   array_push($categories, 'leisure');
 
-  array_push($categories, 'old_photos');//GONE for now!
+  //array_push($categories, 'old_photos');//GONE for now!
 
   array_push($categories, 'style');
 
@@ -112,7 +112,7 @@
 
           "iId" => rand(1000,4000),
 
-          "probabilities" =>$probabilities,
+          "probability" =>$probabilities,
 
           "dominant_category" => $dominant_category,
 

@@ -100,7 +100,7 @@ $( document ).ready(function() {
 		console.log('$("#tile_"+position_index).data id ' ,$("#tile_"+position_index).data('iId'));
 		var newDominantCategory = $(this).text();
 		//Update category in skyline.json through update_dominant_category.php
-		 $.post( "../update_dominant_category.php", { uId: thisUId, newDominantCategory: $(this).text(), iId: $("#tile_"+position_index).data('iId') } , function( data ) {
+		 $.post( "../update_dominant_category.php", {uId: thisUId, newDominantCategory: $(this).text(), iId: $("#tile_"+position_index).data('iId') } , function( data ) {
 		 	console.log(data);
 
 		 	

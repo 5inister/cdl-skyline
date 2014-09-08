@@ -1,4 +1,7 @@
 <?php
+	//Eneable error logging to php_errors.log.txt
+	ini_set("log_errors" , "1");
+	ini_set("error_log" , "php_errors.log.txt");
 	//open the json, find the iId we have landed on in the javascript and update the 'visited variable. then write out the json again'
 	$dir = $_POST['uId'];
 	$iId = $_POST["iId"];//'3698';

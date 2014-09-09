@@ -98,6 +98,7 @@ $( document ).ready(function() {
 	$('.category').on('click', function(){
 		console.log('$("#tile_"+position_index).data id ' ,$("#tile_"+position_index).data('iId'));
 		var newDominantCategory = $(this).text();
+		 
 		 $.post( "../update_dominant_category.php", { uId: thisUId, newDominantCategory: $(this).text(), iId: $("#tile_"+position_index).data('iId') } , function( data ) {
 		 	console.log(data);
 
@@ -171,11 +172,99 @@ $( document ).ready(function() {
 	var imageSource0 ="../"+thisUId+"/images/dudeSprite.png"
 	
 	var logInSuccess = false;
+	var dates = {
+    convert:function(d) {
+        // Converts the date in d to a date-object. The input can be:
+        //   a date object: returned without modification
+        //  an array      : Interpreted as [year,month,day]. NOTE: month is 0-11.
+        //   a number     : Interpreted as number of milliseconds
+        //                  since 1 Jan 1970 (a timestamp) 
+        //   a string     : Any format supported by the javascript engine, like
+        //                  "YYYY/MM/DD", "MM/DD/YYYY", "Jan 31 2009" etc.
+        //  an object     : Interpreted as an object with year, month and date
+        //                  attributes.  **NOTE** month is 0-11.
+        return (
+            d.constructor === Date ? d :
+            d.constructor === Array ? new Date(d[0],d[1],d[2]) :
+            d.constructor === Number ? new Date(d) :
+            d.constructor === String ? new Date(d) :
+            typeof d === "object" ? new Date(d.year,d.month,d.date) :
+            NaN
+        );
+    },
+    compare:function(a,b) {
+        // Compare two dates (could be of any type supported by the convert
+        // function above) and returns:
+        //  -1 : if a < b
+        //   0 : if a = b
+        //   1 : if a > b
+        // NaN : if a or b is an illegal date
+        // NOTE: The code inside isFinite does an assignment (=).
+        return (
+            isFinite(a=this.convert(a).valueOf()) &&
+            isFinite(b=this.convert(b).valueOf()) ?
+            (a>b)-(a<b) :
+            NaN
+        );
+    },
+    inRange:function(d,start,end) {
+        // Checks if date in d is between dates in start and end.
+        // Returns a boolean or NaN:
+        //    true  : if d is between start and end (inclusive)
+        //    false : if d is before start or after end
+        //    NaN   : if one or more of the dates is illegal.
+        // NOTE: The code inside isFinite does an assignment (=).
+       return (
+            isFinite(d=this.convert(d).valueOf()) &&
+            isFinite(start=this.convert(start).valueOf()) &&
+            isFinite(end=this.convert(end).valueOf()) ?
+            start <= d && d <= end :
+            NaN
+        );
+    }
+}
+	//this is a conversion utility function 
+
+	function stringToDate(dateString){
+		var noT = dateString.replace("T", " ");
+		///get rid of the "+0000"
+		var shortDate = noT.substring(0, noT.length-5);
+		//get rid of 
+		var formatted = shortDate.replace(/-/g, "/");
+		var aDate = new Date(formatted);
+		return aDate;
+	}
+	//here is my comparitor sorting function
+	function compareDate(a,b) {
+		//if (stringToDate(a.dt) > stringToDate(b.dt))
+
+		if	(dates.compare(stringToDate(a.dt),stringToDate(b.dt)))
+			 return -1;
+		if (!dates.compare(stringToDate(a.dt),stringToDate(b.dt)))
+			return 1;
+			return 0;
+	}
+	
+
 	
 	$.post( "../get_skyline.php", {  uId: thisUId } , function( data ) {
 		var found_start_pos = false;
 
-		console.log(data);
+		console.log("data",data);
+		for (var i = 0; i < data.length; i++) {
+			console.log(i," ",data[i].dt);
+		};
+
+		data.sort(compareDate);
+		
+		console.log("sorted dates: ")
+		for (var i = 0; i < data.length; i++) {
+			console.log(i," ",data[i].dt);
+		};
+
+		console.log("foramtted data",data);
+
+		//sort data by data
 		if(data!==null) {
 			logInSuccess = true;
 			console.log('login success');

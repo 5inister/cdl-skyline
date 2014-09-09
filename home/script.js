@@ -100,7 +100,7 @@ $( document ).ready(function() {
 		console.log('$("#tile_"+position_index).data id ' ,$("#tile_"+position_index).data('iId'));
 		var newDominantCategory = $(this).text();
 		//Update category in skyline.json through update_dominant_category.php
-		 $.post( "../update_dominant_category.php", {uId: thisUId, newDominantCategory: $(this).text(), iId: $("#tile_"+position_index).data('iId') } , function( data ) {
+		 $.post( "../update_dominant_category.php", { uId: thisUId, newDominantCategory: $(this).text(), iId: $("#tile_"+position_index).data('iId') } , function( data ) {
 		 	console.log(data);
 
 		 	
@@ -159,6 +159,7 @@ $( document ).ready(function() {
 	$("#dude").css("top",-doubleRowHeight);
 	// $("#categoryBtn").click(function(){toggleShowPhoto(position_index)});
 
+	///TODO add mapping from easy username
 	if(useLogIn){
 	    //var fbid_div = document.getElementById("fbidDiv");
 		var uid=($("#fbidDiv").text()).trim();
@@ -235,7 +236,7 @@ $( document ).ready(function() {
 			$("#tile_"+i).data("url","../../"+data[i].url);
 			$("#tile_"+i).data("probabilities", data[i].probability);
 			//TODO change to real URL
-			$("#tile_"+i).data("fname", "../"+thisUId+"/images/"+data[i].fname);
+			$("#tile_"+i).data("url", "../../"+data[i].url);
 			$("#tile_"+i).data("dominant_category", data[i].dominant_category);
 
 			//bind our click event
@@ -343,7 +344,7 @@ $( document ).ready(function() {
 			//console.log(menuHeight);
 			$("#categoryMenu").css('height',menuHeight+'px');
 			url = $("#tile_"+position_index).data("url");
-			//url = '../'+thisUId+'/images/photo.jpg';
+			//url = '../'+thisUId+'/images/face.jpg';
 
 			//we need to make sure the new source image has loaded before we check the dimensions: hence this callback
 			$("#secret").find("img").attr("src", url).load(function() {

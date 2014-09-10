@@ -4,7 +4,7 @@
 	$iId = $_POST["iId"];//'3698';
 	//$dir = "USER000";
 	//$iId = 2910;
-	$newDominantCategory = $_POST['newDominantCategory'];
+	//$newDominantCategory = $_POST['newDominantCategory'];
 
 	$file = $dir .'/'. 'skyline.json';
 
@@ -36,8 +36,8 @@
 		fclose($fs);
 		$just_written_json=json_decode(file_get_contents($file), true);
 	}
-	// $response = array();
-	// array_push($response,$newDominantCategory);
-	// echo json_encode($response);
+	$response = array();
+	array_push($response,$iId);
+	echo json_encode($response);
 	
 ?>

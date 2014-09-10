@@ -8,11 +8,11 @@ $( document ).ready(function() {
 	       || navigator.userAgent.match(/BlackBerry/i)
 	       || navigator.userAgent.match(/Windows Phone/i)
 	     ){
-	     	console.log('found mobile');
+	     	//console.log('found mobile');
 	        return true;
 	      }
 	     else {
-	     	console.log('found desktop');
+	     	//console.log('found desktop');
 	        return false;
 	      }
     }
@@ -24,16 +24,21 @@ $( document ).ready(function() {
 	var fontSize;
 	//this is the main index defining which tile is currently active
 	var position_index =0;
-
+	var num_elements_to_display = 25;
 	var userNameMap = [];
 	var useMobile = false;
 	var thisUId;
 	var useLogIn = true;
 	var user_0 = []
+
+	var startPoint;
+	var endPoint;
+
 	userNameMap['5inister']='USER000';
 	userNameMap['5555555inister']='USER000jalskdghaklsjdlkajhsdlkgfhjadlk';
 	userNameMap['test-user']='100006590832317';
 	userNameMap['heereveld']='100002179985407';
+	userNameMap['chambers']='100000230259624';
 	userNameMap['']='';
 	
 	if(detectmob()){
@@ -46,222 +51,244 @@ $( document ).ready(function() {
 		fontSize =12;
 		
 	}
-	//set up the proportions of everything with respect to the variable 'spacing'
-	var dwidth = window.innerWidth;
-	var margin= spacing*0.02;
-	var padding= spacing*0.02;
 
-	var sort_type = 1;
-	
-	var is_moving = false;
-	var num_elements = 0;
-	var num_visible_elements = 6;
-	//make ajax call - run php script which will return contents of our json file into array called data
-		//alert("Hello, " + response);
-	
-	
+//	function setup(){
+		//set up the proportions of everything with respect to the variable 'spacing'
+		var dwidth = window.innerWidth;
+		var margin= spacing*0.02;
+		var padding= spacing*0.02;
 
-	var cellWidth = spacing*0.3;
-
-
-	var cellProportion = 76/82;
-	var bleed = 1;
-	var cellHeight = (cellWidth*cellProportion)-bleed;
-
-	var imageWidth = cellWidth*12;
-	var imageHeight = cellHeight*3;
-
-	var singleRowHeight = cellWidth*cellProportion;
-	var doubleRowHeight = singleRowHeight*2;
-
-	
-	
-	var imageWidthMinus2CellWidths = imageWidth-(2*cellWidth);
-
-	//container has the tiles inside
-	$('#container').css('width',dwidth +'px');
-	$('#container').css('height',window.innerHeight+'px');
-	
-	
-	$('#secret').css('width',spacing).css('height',spacing);
-	$('#secret').find('img').click(function(){
-		toggleShowPhoto(position_index);
+		var sort_type = 1;
 		
-	});
+		var is_moving = false;
+		var num_elements = 0;
+		var num_visible_elements = 6;
+		//make ajax call - run php script which will return contents of our json file into array called data
+			//alert("Hello, " + response);
+		
+		
 
-	for (var i = 0; i < categories.length; i++) {
-		categories[i];
-		var new_element = "<div class='category'>"+categories[i]+"</div>" ;
-		$("#categoryMenu").append(new_element);
-	};
-	$('.category').css('font-size',fontSize+'pt');
-	$('.category').css('color','gray');
-	$('.category').on('click', function(){
-		console.log('$("#tile_"+position_index).data id ' ,$("#tile_"+position_index).data('iId'));
-		var newDominantCategory = $(this).text();
-		//Update category in skyline.json through update_dominant_category.php
-		 $.post( "../update_dominant_category.php", { uId: thisUId, newDominantCategory: $(this).text(), iId: $("#tile_"+position_index).data('iId') } , function( data ) {
-		 	console.log(data);
-
-		 	
-		 	$("#tile_"+position_index).data("dominant_category", newDominantCategory);
-		 	$('.category').css('color','gray');
-		 	
-		 	$('.category').each(function( index ) {	
-		 		
-		 		console.log(categories[index], newDominantCategory);
-
-				 if( $(this).data('category')==newDominantCategory){
-				 	
-				 	$(this).css('color','white');
-				// 	$(this).data('color','red');
-				 }
-				 else{
-				 	$(this).css('color','gray');
-				 }
-
-			});
+		var cellWidth = spacing*0.3;
 
 
-		 }, "json");
+		var cellProportion = 76/82;
+		var bleed = 1;
+		var cellHeight = (cellWidth*cellProportion)-bleed;
 
-		 $.post( "../update_categorised.php", { uId: thisUId, iId: $("#tile_"+position_index).data('iId') } , function( data ) {
-		 //	console.log(data);
+		var imageWidth = cellWidth*12;
+		var imageHeight = cellHeight*3;
 
-		 }, "json");
-		var newUrl = "../"+thisUId+"/images/"+newDominantCategory+".png";
-		$("#tile_"+position_index).data("fname", newUrl);
-		$("#tile_"+position_index).find('img').attr('src', newUrl);
-	});
+		var singleRowHeight = cellWidth*cellProportion;
+		var doubleRowHeight = singleRowHeight*2;
 
-	$('#controls').css('left','0px').css('top',spacing +'px');
-	
-	$('.control').css('font-size',(spacing*0.1)+'pt');
-	$('.control').css('margin',(margin)+'px');
-	$('.control').css('padding',padding+'px');
-	
+		
+		
+		var imageWidthMinus2CellWidths = imageWidth-(2*cellWidth);
 
-	$('#rightArrow').find('img').load(function(){
-		console.log('loaded');
-		var offset = $('#rightArrow').width();
-		console.log('offset ',offset);
-		var rightArrow =spacing - ((2*padding)+offset+(2*margin)); 
-		$('#rightArrow').css('left',rightArrow).css('top',(margin+padding)+'px');
-		$('#leftArrow').css('left',margin+'px').css('top',(margin+padding)+'px');
-		}
-	);
-	
-	$("#leftArrow").click(animateBackwards);
-	$("#rightArrow").click(animateForward);
+		//container has the tiles inside
+		$('#container').css('width',dwidth +'px');
+		$('#container').css('height',window.innerHeight+'px');
+		
+		
+		$('#secret').css('width',spacing).css('height',spacing);
+		$('#secret').find('img').click(function(){
+			toggleShowPhoto(position_index);
+			
+		});
+
+		for (var i = 0; i < categories.length; i++) {
+			categories[i];
+			var new_element = "<div class='category'>"+categories[i]+"</div>" ;
+			$("#categoryMenu").append(new_element);
+		};
+
+		$('.category').css('font-size',fontSize+'pt');
+		$('.category').css('color','gray');
+		$('.category').on('click', function(){
+
+			//console.log('$("#tile_"+position_index).data id ' ,$("#tile_"+position_index).data('iId'));
+			var newDominantCategory = $(this).text();
+			//console.log('newDominantCategory ',newDominantCategory);
+			//Update category in skyline.json through update_dominant_category.php
+			 //console.log(thisUId, $(this).text(), $("#tile_"+position_index).data('iId'));
+			 $.post( "../update_dominant_category.php", { uId: thisUId, newDominantCategory: $(this).text(), iId: $("#tile_"+position_index).data('iId') } , function( data ) {
+			 
+			 	//console.log("1st post data ",data);
+			 	$("#tile_"+position_index).data("dominant_category", newDominantCategory);
+			 	$('.category').css('color','gray');
+			 	
+			 	$('.category').each(function( index ) {	
+			 		
+			 		////console.log(categories[index], newDominantCategory);
+					 if( $(this).data('category')==newDominantCategory){
+					 	
+					 	$(this).css('color','white');
+					// 	$(this).data('color','red');
+					 }
+					 else{
+					 	$(this).css('color','gray');
+					 }
+
+				});
+				$.post( "../update_categorised.php", { uId: thisUId, iId: $("#tile_"+position_index).data('iId') } , function( data ) {
+			 		//console.log("2nd post data ",data);
+
+			 	}, "json");
 
 
-	$("#dude").css("left",0);
-	$("#dude").css("top",-doubleRowHeight);
-	// $("#categoryBtn").click(function(){toggleShowPhoto(position_index)});
+			 }, "json");
 
-	///TODO add mapping from easy username
-	if(useLogIn){
-	    //var fbid_div = document.getElementById("fbidDiv");
-		var uid=($("#fbidDiv").text()).trim();
-		console.log(uid);
-		if (uid==""){
-			var response = prompt("What is your userID?");
-			thisUId = userNameMap[response];
-		}
-		else{
-			thisUId=uid;
-		}
-	}
-	else{
-		thisUId = userNameMap["5inister"];
-	}
 
-	$('#mask').css('width',cellWidth+'px').css('height',singleRowHeight+'px').css('top',(spacing-cellHeight)+'px' );
-	$('#mask').find('img').css('width',imageWidth+'px').css('height',imageHeight+'px');
-	var imageSource0 ="../"+thisUId+"/images/dudeSprite.png"
-	
-	var logInSuccess = false;
-	
-	$.post( "../get_skyline.php", {  uId: thisUId } , function( data ) {
-		var found_start_pos = false;
-		console.log(data);
-		if(data!==null) {
-			logInSuccess = true;
-			console.log('login success');
-		}
-		else{
-			console.log('login failure');
-			$('#body_container').remove();
-			$('#controls').remove();
-			$('#secret').remove();
-			$('#dudeContainer').remove();
+			 
+			var newUrl = "../"+thisUId+"/images/"+newDominantCategory+".png";
+			$("#tile_"+position_index).data("fname", newUrl);
+			$("#tile_"+position_index).find('img').attr('src', newUrl);
+		});
 
-			var new_element = "<div id='failureMessage' > Your login was not correct. Please try again</div>" ;
-			$("body").append(new_element).css('color','white');
-		}
-		for (var i = 0; i < data.length; i++) {				
-		//if this picture is the first to be flagged as not yet visited set the start position to the picture left of it
+		$('#controls').css('left','0px').css('top',spacing +'px');
+		
+		$('.control').css('font-size',(spacing*0.1)+'pt');
+		$('.control').css('margin',(margin)+'px');
+		$('.control').css('padding',padding+'px');
+		
 
-			if(data[i].visited ==0 && !found_start_pos){
-				position_index = i-1;
-				found_start_pos = true;
+		$('#rightArrow').find('img').load(function(){
+			//console.log('loaded');
+			var offset = $('#rightArrow').width();
+			//console.log('offset ',offset);
+			var rightArrow =spacing - ((2*padding)+offset+(2*margin)); 
+			$('#rightArrow').css('left',rightArrow).css('top',(margin+padding)+'px');
+			$('#leftArrow').css('left',margin+'px').css('top',(margin+padding)+'px');
+			}
+		);
+		
+		$("#leftArrow").click(animateBackwards);
+		$("#rightArrow").click(animateForward);
+
+
+		$("#dude").css("left",0);
+		$("#dude").css("top",-doubleRowHeight);
+		// $("#categoryBtn").click(function(){toggleShowPhoto(position_index)});
+
+		///TODO add mapping from easy username
+		if(useLogIn){
+		    //var fbid_div = document.getElementById("fbidDiv");
+			var uid=($("#fbidDiv").text()).trim();
+			//console.log(uid);
+			if (uid==""){
+				var response = prompt("What is your userID?");
+				thisUId = userNameMap[response];
+			}
+			else{
+				thisUId='100002179985407';//uid;
 			}
 		}
-		
-		
+		else{
+			thisUId = userNameMap["5inister"];
+		}
 
-		for (var i = 0; i < data.length; i++) {
-			// console.log(data[i]);
-			//a global to tell us how many divs we have
-			num_elements = data.length;
-			var dir_plus_name ="../"+thisUId+"/images/"+data[i].fname;
-			//console.log(dir_plus_name);
-			var new_element = "<div id='tile_"+i+"' class='tile'>"+" <img src='"+dir_plus_name+"  '</div>" ;
-			//var new_element = "<div id='tile_"+i+"' class='tile'><p>"+ data[i].dominant_category+ " </p>  <img src='"+dir_plus_name+"  '</div>" ;
-			//var new_element = "<div id='new"+i+"' class='book'><p> <img src='"+dir_plus_name+"' width = '200'>" + "</p></div>" ;
+		$('#mask').css('width',cellWidth+'px').css('height',singleRowHeight+'px').css('top',(spacing-cellHeight)+'px' );
+		$('#mask').find('img').css('width',imageWidth+'px').css('height',imageHeight+'px');
+		var imageSource0 ="../"+thisUId+"/images/dudeSprite.png"
+		
+		var logInSuccess = false;
+	
+	function setupEverything(isFirstLoad, lastPositionIndex){
+
+		$.post( "../get_skyline.php", {  uId: thisUId } , function( data ) {
+			var found_start_pos = false;
+			//console.log(data);
+			if(data!==null) {
+				logInSuccess = true;
+				//console.log('login success');
+			}
+			else{
+				//console.log('login failure');
+				$('#body_container').remove();
+				$('#controls').remove();
+				$('#secret').remove();
+				$('#dudeContainer').remove();
+
+				var new_element = "<div id='failureMessage' > Your login was not correct. Please try again</div>" ;
+				$("body").append(new_element).css('color','white');
+			}
 			
+			//find position index from data IF this is the first load, otherwise just use the last position index (ie where we were when we reloaded the data)
+			if(isFirstLoad){
+				for (var i = 0; i < data.length; i++) {				
+				//if this picture is the first to be flagged as not yet visited set the start position to the picture left of it
 
-			left_shift = -spacing*position_index;
-			threshold_index = position_index;
-
-	 		$("#container").append(new_element);// "<p>Test</p>" );
-			$("#tile_"+i).css("left",(left_shift +(i*spacing))+"px");
-			// $("#tile_"+i).css("border-left","solid 2px");
-			// $("#tile_"+i).css("border-right","solid 2px");
-			// $("#tile_"+i).css("border-color","white");
-
-			$("#tile_"+i).find('img').css("width",(spacing+1)+"px");
-			$("#tile_"+i).data("iId", data[i].iId);
-			$("#tile_"+i).data("index",i);
-			$("#tile_"+i).data("url","../../"+data[i].url);
-			$("#tile_"+i).data("probabilities", data[i].probability);
-			//TODO change to real URL
-			$("#tile_"+i).data("url", "../../"+data[i].url);
-			$("#tile_"+i).data("dominant_category", data[i].dominant_category);
-
-			//bind our click event
-			$("#tile_"+i).on('click', function(){
-				console.log('index is ',$(this).data('index'));//
-				if($(this).data('index')==position_index){
-					toggleShowPhoto(position_index);
+					if(data[i].visited ==0 && !found_start_pos){
+						position_index = i-1;
+						found_start_pos = true;
+					}
 				}
+			}
+			else{
+				position_index = lastPositionIndex;
+			}
+
+			endPoint = Math.min(data.length, position_index+num_elements_to_display);
+			startPoint = Math.max(position_index-num_elements_to_display, 0);
+
+			//destroy existing tiles
+			$( ".tile" ).remove();
+			
+			for (var i = startPoint; i < endPoint; i++) {
+				// //console.log(data[i]);
+				//a global to tell us how many divs we have
+				num_elements = data.length;
+				var dir_plus_name ="../"+thisUId+"/images/"+data[i].fname;
+				////console.log(dir_plus_name);
+				var new_element = "<div id='tile_"+i+"' class='tile'>"+" <img src='"+dir_plus_name+"  '</div>" ;
+				//var new_element = "<div id='tile_"+i+"' class='tile'><p>"+ data[i].dominant_category+ " </p>  <img src='"+dir_plus_name+"  '</div>" ;
+				//var new_element = "<div id='new"+i+"' class='book'><p> <img src='"+dir_plus_name+"' width = '200'>" + "</p></div>" ;
 				
-		
-				$.post( "../update_viewed.php", { uId: thisUId,  iId: $("#tile_"+position_index).data('iId') } , function( data ) {
-				 //	console.log(data);
-				 	}, "json");
+
+				left_shift = -spacing*position_index;
+				threshold_index = position_index;
+
+		 		$("#container").append(new_element);// "<p>Test</p>" );
+				$("#tile_"+i).css("left",(left_shift +(i*spacing))+"px");
+				// $("#tile_"+i).css("border-left","solid 2px");
+				// $("#tile_"+i).css("border-right","solid 2px");
+				// $("#tile_"+i).css("border-color","white");
+
+				$("#tile_"+i).find('img').css("width",(spacing+1)+"px");
+				$("#tile_"+i).data("iId", data[i].iId);
+				$("#tile_"+i).data("index",i);
+				$("#tile_"+i).data("url","../../"+data[i].url);
+				$("#tile_"+i).data("probabilities", data[i].probability);
+				//TODO change to real URL
+				$("#tile_"+i).data("url", "../../"+data[i].url);
+				$("#tile_"+i).data("dominant_category", data[i].dominant_category);
+
+				//bind our click event
+				$("#tile_"+i).on('click', function(){
+					//console.log('index is ',$(this).data('index'));//
+					
+					if($(this).data('index')==position_index){
+						toggleShowPhoto(position_index);
+					}
+					
+			
+					$.post( "../update_viewed.php", { uId: thisUId,  iId: $("#tile_"+position_index).data('iId') } , function( data ) {
+					 //	//console.log(data);
+					}, "json");
 				});
-			//hide the far away elements
+				//hide the far away elements
 				if(i>=num_visible_elements+2+threshold_index){
 					$("#tile_"+i).css("visibility","hidden");
 				}
 			};
+
 			var first_iId=$("#tile_"+position_index).data('iId');
 			$.post( "../update_skyline.php", {uId: thisUId, iId: first_iId}, function(data) { //Mark the first tile visited
-				console.log("updated skyline with this iId ",first_iId);
+				//console.log("updated skyline with this iId ",first_iId);
 			});
 
 		}, "json");
+	}
 
 	var speed = 1000;
 	var distance = spacing;
@@ -281,6 +308,8 @@ $( document ).ready(function() {
 	});
 	
 	
+	setupEverything(true, 0);
+
 	function hidePhoto(){
 		$("#secret").css("visibility","hidden");
 	}
@@ -307,7 +336,7 @@ $( document ).ready(function() {
 			var categoryFname = $("#tile_"+div_index).data("dominant_category");
 			var category =categoryFname.split('.')[0];
 			var probabilities = $("#tile_"+div_index).data("probabilities");
-			console.log(probabilities);
+			//console.log(probabilities);
 			var menuList = [];
 			//make an array of objects which we can then sort by key
 			for (var i = 0; i < categories.length; i++) {
@@ -318,14 +347,14 @@ $( document ).ready(function() {
 	   		 	o['category']= categories[i];
 	   		 	menuList.push(o);
 			};
-			//console.log(menuList);
+			////console.log(menuList);
 			menuList.sort(compare);
 			
-			//console.log(menuList);
+			////console.log(menuList);
 			
 			$('.category').each(function( index ) {
-				console.log(menuList[index]['category'],menuList[index]['probability']);
-				// console.log($(this).text());
+				//console.log(menuList[index]['category'],menuList[index]['probability']);
+				// //console.log($(this).text());
 				$(this).text(menuList[index]['category']);
 				$(this).data('category',menuList[index]['category'] );
 				// $(this).data('color','white');
@@ -341,7 +370,7 @@ $( document ).ready(function() {
 			});
 			
 			var menuHeight = (window.innerHeight - spacing);
-			//console.log(menuHeight);
+			////console.log(menuHeight);
 			$("#categoryMenu").css('height',menuHeight+'px');
 			url = $("#tile_"+position_index).data("url");
 			//url = '../'+thisUId+'/images/face.jpg';
@@ -355,13 +384,13 @@ $( document ).ready(function() {
 				// $('.category').width(photoWidth);
 				//if landscape
 				if(photoWidth>photoHeight){
-				//	console.log('landscape');
+				//	//console.log('landscape');
 					$("#secret").find("img").width(spacing+'px');
 					$("#secret").find("img").height('auto');
 				}
 				//if portrait
 				else if(photoHeight>photoWidth){
-				//	console.log('portrait');
+				//	//console.log('portrait');
 					$("#secret").find("img").height(spacing+'px');
 					$("#secret").find("img").width('auto');
 				}
@@ -392,14 +421,14 @@ $( document ).ready(function() {
 			}
 	function getIDofClosestTile(){
 		var id=0;
-		//console.log(id);
+		////console.log(id);
 		return  id;
 	}
 	function manageVisibility(position_index, num_visible_elements, num_elements){
-		//console.log("position_index ",position_index ," num_visible_elements ",num_visible_elements," num_elements ",num_elements);
+		////console.log("position_index ",position_index ," num_visible_elements ",num_visible_elements," num_elements ",num_elements);
 		for(var i = position_index+num_visible_elements; i<num_elements;i++){
 		    		$("#tile_"+i).css("visibility","hidden");
-		    		//console.log("setting ")
+		    		////console.log("setting ")
     	}
 
     	for(var i = position_index-num_visible_elements; i>=0;i--){
@@ -414,7 +443,7 @@ $( document ).ready(function() {
 	$("#dude").attr("src",imageSource0);
 
 	function animateForward(){
-		console.log('is_moving ',is_moving)
+		//console.log('is_moving ',is_moving)
 		var startLeft=parseInt($(".tile").css("left"));
 		var tick=0;
 
@@ -436,7 +465,7 @@ $( document ).ready(function() {
 							//var travelled=startLeft-currentLeft;
 							if (prog>tick*.08){
 								var x = $("#dude").position().left;
-								//console.log("dudex="+x);
+								////console.log("dudex="+x);
 
 								//if the image is shifted to the left less than the image width minus the size of one cell
 								if (x > -imageWidthMinus2CellWidths){
@@ -458,23 +487,31 @@ $( document ).ready(function() {
 							$("#dude").css("top",-doubleRowHeight);
 							
 							if ($(".tile:animated").length === 0){
-								console.log("gone left . position_index ",position_index);
+								//console.log("gone left . position_index ",position_index);
 								$(".tile").css("background-color","black");
 								$("#tile_"+position_index).css("background-color","red");
 								manageVisibility(position_index, num_visible_elements, num_elements);
 								var thisIId = $("#tile_"+position_index).data('iId');//"3669";
 								$.post( "../update_skyline.php", {  uId: thisUId, iId:thisIId } , function( data ) {
-									console.log("updated skyline with this iId ",thisIId);
+									//console.log("updated skyline with this iId ",thisIId);
 								});
 								var thisCategory=$("#tile_"+position_index).data("dominant_category");
-								console.log(thisCategory);
+								//console.log(thisCategory);
 								is_moving = false;
+
+								//TODO this number should probably be worked out mathematically  from the div widths...
+								var end_safe_zone = 10;
+								if(position_index==endPoint-end_safe_zone){
+									//console.log("setting up everything again");
+									setupEverything(false, position_index);
+								}
+								
 							}
 						}
 					});
 			}
 			else{
-				console.log("End of screen");
+				//console.log("End of screen");
 				$("#dude").css("left",-cellWidth);
 				$("#dude").css("top",-doubleRowHeight);
 				is_moving=false;
@@ -482,7 +519,7 @@ $( document ).ready(function() {
 		}			
 	}		
 	function animateBackwards(){
-		console.log('is_moving ',is_moving)
+		//console.log('is_moving ',is_moving)
 		var startLeft=parseInt($(".tile").css("left"));
 		var tick=0;
   		if(!is_moving){
@@ -501,7 +538,7 @@ $( document ).ready(function() {
 							//var travelled=startLeft-currentLeft;
 							if (prog>tick*.08){
 								var x = $("#dude").position().left;
-								//console.log("dudex="+x);
+								////console.log("dudex="+x);
 								if (x > -imageWidthMinus2CellWidths){
 									$("#dude").css("left",x-cellWidth);
 								}
@@ -518,21 +555,26 @@ $( document ).ready(function() {
 							$("#dude").css("left",-cellWidth);
 							$("#dude").css("top",-doubleRowHeight);
 							if ($(".tile:animated").length === 0){
-								console.log("gone left . position_index ",position_index);
+								//console.log("gone left . position_index ",position_index);
 								$(".tile").css("background-color","black");
 								$("#tile_"+position_index).css("background-color","red");
 								manageVisibility(position_index, num_visible_elements, num_elements);
 								var thisIId = $("#tile_"+position_index).data('iId');//"3669";
 								$.post( "../update_skyline.php", {  uId: thisUId, iId:thisIId } , function( data ) {
-									console.log("updated skyline with this iId ",thisIId);
+									//console.log("updated skyline with this iId ",thisIId);
 								});
 								is_moving = false;
+								if(position_index==startPoint){
+									//console.log("setting up everything again");
+									setupEverything(false, position_index);
+								}
+
 							}
 						}
 					});
 			}
 			else{
-				console.log("End of screen");
+				//console.log("End of screen");
 				$("#dude").css("left",0);
 				$("#dude").css("top",-doubleRowHeight);
 				is_moving=false;

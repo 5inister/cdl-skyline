@@ -1,13 +1,18 @@
 <?php
 	//Eneable error logging to php_errors.log.txt
+	date_default_timezone_set('Europe/London');
 	ini_set("log_errors" , "1");
 	ini_set("error_log" , "php_errors.log.txt");
 	//open the json, find the iId we have landed on in the javascript and update the 'visited variable. then write out the json again'
+		// $dir = "100002179985407";
+		// $iId = "10151744582222895.jpg";
+		// $newDominantCategory = "travel";
+	
 	$dir = $_POST['uId'];
 	$iId = $_POST["iId"];//'3698';
-	//$dir = "USER000";
-	//$iId = 3188;
 	$newDominantCategory = $_POST['newDominantCategory'];
+
+
 	//$newDominantCategory = "family";
 	$file = $dir .'/'. 'skyline.json';
 	$histogramFile = $dir .'/'. 'histogram.json';
@@ -45,6 +50,7 @@
 	fwrite( $fs, json_encode($existingJson));
 	fclose($fs);
 	//Make sure json doesn't get written as null
+	
 	$just_written_json=json_decode(file_get_contents($file), true);
 	while($just_written_json[0] == null){
 		$fs = fopen($file,"w");
@@ -58,12 +64,15 @@
 	fclose($fs1);
 	//Make sure json doesn't get written as null
 	$just_written_json=json_decode(file_get_contents($histogramFile), true);
+
 	while($just_written_json == null){
 		$fs1 = fopen($histogramFile,"w");
 		fwrite($fs1, json_encode($histogramJson));
 		fclose($fs1);
 		$just_written_json=json_decode(file_get_contents($histogramFile), true);
 	}
-	/*array_push($response,$newDominantCategory);
-	echo json_encode($response);*/
+	$response = array();
+	array_push($response,$newDominantCategory);
+	echo json_encode($response);
+
 ?>
